@@ -1,11 +1,45 @@
-const app = require('./app');
+const express = require("express");
+const mongoose = require("mongoose");
+const todoHandler=require('./routeHandler/todoHandler')
+const userRoleRoutes = require("./app/module/userrole/userrole.route");
+require("dotenv").config();
+const cors = require("cors");
 
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+const app = express();
+app.use(cors());
+app.use(express.json());
+const port = 5000;
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/inventory")
+  .then(() => console.log("connection successfull"))
+  .catch((err) => console.log(err));
+
+// application route
+app.use('/todo',todoHandler)
+app.use('/userrole',userRoleRoutes)
+app.use('/userrole',userRoleRoutes)
+app.use('/getuserrole',userRoleRoutes)
+
+function errorHandler(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500).json({ error: err });
+}
+
+app.listen(port, () => {
+  console.log(`app litstening at port ${port}`);
 });
 
+// const app = require('./app');
+
+// const PORT = process.env.PORT || 3000;
+
+// app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+// });
 
 // const app = require('./app.js');
 // const UserRoles=require('./app/module/userroll/userroll.model.js')
@@ -19,7 +53,7 @@ app.listen(PORT, () => {
 //     console.log('Database connection successful');
 
 //     // const userrole=await UserRoles.create({
-//     //   userrollname: 'example' 
+//     //   userrollname: 'example'
 //     // })
 //     // console.log(userrole)
 //   } catch (err) {
@@ -37,8 +71,6 @@ app.listen(PORT, () => {
 //   }
 //   console.log(`Server is listening on port ${port}`);
 // });
-
-
 
 // const app = require('./app.js');
 
@@ -68,12 +100,9 @@ app.listen(PORT, () => {
 //   console.log(`Server is listening on port ${port}`);
 // })
 
-
-
 // app.use(cors());
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
-
 
 // const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.u4yxlqg.mongodb.net/?retryWrites=true&w=majority`;
 // const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.u4yxlqg.mongodb.net/?retryWrites=true&w=majority`;
@@ -84,8 +113,6 @@ app.listen(PORT, () => {
 //     deprecationErrors: true,
 //   },
 // });
-
-
 
 // async function run() {
 //   try {
@@ -100,7 +127,6 @@ app.listen(PORT, () => {
 //     // const navbarCollection = client.db("inventory").collection("menu");
 //     // const userCollection = client.db("inventory").collection("users");
 //     // const userRoleCollection = client.db("inventory").collection("userroles");
- 
 
 //     // app.get("/navbar", async (req, res) => {
 //     //   const query = {};
@@ -119,7 +145,7 @@ app.listen(PORT, () => {
 //     //     } else {
 //     //       //  Hash password
 //     //       const hashedPassword = await bcrypt.hash(password, 10);
-      
+
 //     //       const result = await userCollection.insertOne({
 //     //         username,
 //     //         email,
@@ -141,11 +167,11 @@ app.listen(PORT, () => {
 //     //     const { email, password } = req.body;
 //     //     // Check if user exists
 //     //     const user = await userCollection.findOne({ email });
-   
+
 //     //     if (!user || !(await bcrypt.compare(password, user.password))) {
 //     //       return res.status(400).json({ message: "Invalid email or password" });
 //     //     }
-  
+
 //     //     res.status(200).json({ message: "Login successful" });
 //     //   } catch (error) {
 //     //     console.error(error);
@@ -175,7 +201,7 @@ app.listen(PORT, () => {
 // //         //   return res.status(400).json({ message: "User roll already exists" });
 // //         // }
 // //         // else{
-// //         //   await UserRoles.create({ userrollname }); 
+// //         //   await UserRoles.create({ userrollname });
 // //         //   res.status(201).json({ message: "User roll created successfully" });
 // //         // }
 // //         const newUserRole = new UserRoles({ userrollname: 'example' });

@@ -1,11 +1,11 @@
 // userRole.route.js
 const express = require("express");
 const router = express.Router();
-const userRoleController = require("./userroll.controller");
+const userRoleController = require("./userrole.controller");
 
-router.post("/create-userrole", userRoleController.createUserRole);
-router.get("/userroles", userRoleController.getAllUserRoles);
-
+// router.get("/userroles", userRoleController.getAllUserRoles);
+router.post("/", userRoleController.createUserRole);
+router.get('/',userRoleController.getUserrole)
 module.exports = router;
 
 
