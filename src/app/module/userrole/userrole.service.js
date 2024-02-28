@@ -12,10 +12,9 @@ const createUserRoleToDB=async(payload)=>{
     } catch (error) {
         console.error("Error saving data to MongoDB:", error);
         throw error// Throw the error to be handled by the caller
-    }
-     
-   
+    }   
 }
+
 const getUserRoleDB=async()=>{
     try {
         const userrole = await UserRole.find().select({
@@ -27,4 +26,5 @@ const getUserRoleDB=async()=>{
         console.error("Error fetching users:", error);
     }
 }
+
 module.exports={createUserRoleToDB,getUserRoleDB}

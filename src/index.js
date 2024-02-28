@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const todoHandler=require('./routeHandler/todoHandler')
 const userRoleRoutes = require("./app/module/userrole/userrole.route");
 const menuItemRoutes=require("./app/module/menus/menu.route");
-
+const serialGenerate =require('./app/module/serialnogenerate/serialnogenerate.route')
+const userCreateRoute=require('./app/module/user/user.route')
 require("dotenv").config();
 const cors = require("cors");
 
@@ -24,6 +25,12 @@ app.use('/userrole',userRoleRoutes)
 app.use('/userrole',userRoleRoutes)
 app.use('/getuserrole',userRoleRoutes)
 app.use('/menuitems',menuItemRoutes)
+app.use('/serial-create',serialGenerate)
+app.use('/serial-getdata',serialGenerate)
+app.use('/user-create',userCreateRoute)
+app.use('/get-user',userCreateRoute)
+app.use('/user',userCreateRoute)
+
 function errorHandler(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
