@@ -26,22 +26,28 @@ const getUserDB = async () => {
     console.error("Error fetching users:", error);
   }
 };
+
 const getUserByIdDB = async (id) => {
-    try {
-        const user = await User.findById(id);
-        return user;
-    } catch (error) {
-        throw new Error('Internal server error');
-    }
+  console.log(id)
+  try {
+      const user = await User.findById(id);
+      if (!user) {
+          throw new Error('User not found');
+      }
+      return user;
+  } catch (error) {
+      throw new Error('Internal server error from service');
+  }
 };
-const updateUserDB = async (id, makeby, updateby) => {
+
+const updateUserDB = async (id, isactive) => {
   try {
     const user = await User.findByIdAndUpdate(
       id,
-      { makeby, updateby },
+      { isactive: isactive },
       { new: true }
     );
-    console.log(user);
+    console.log(user,'service')
     if (!user) {
       throw new Error("User not found");
     }
@@ -52,4 +58,39 @@ const updateUserDB = async (id, makeby, updateby) => {
   }
 };
 
-module.exports = { createUserToDB, getUserDB, getUserByIdDB,updateUserDB };
+const updateUserMultipleStatusDB = async (dataToUpdate) => {
+  console.log(dataToUpdate)
+  try {
+    const promises = dataToUpdate.map(async (user) => {
+        // Update isactive field for each user
+        const updatedUser = await User.findByIdAndUpdate(
+            user._id,
+            { isactive: user.isactive },
+            { new: true }
+        );
+        return updatedUser;
+    });
+    const updatedUsers = await Promise.all(promises);
+    return updatedUsers;
+} catch (error) {
+    console.error('Error updating multiple users:', error);
+    throw new Error('Failed to update multiple data');
+}
+};
+
+const deleteUserDB = async (id) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(id);
+    console.log(deletedUser,'delete')
+    if (!deletedUser) {
+      throw new Error("User not found");
+    }
+    return deletedUser;
+
+  } catch (error) {
+    throw new Error("Internal server error");
+  }
+};
+
+
+module.exports = { createUserToDB, getUserDB, getUserByIdDB,updateUserDB, updateUserMultipleStatusDB,deleteUserDB };

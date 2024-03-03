@@ -30,7 +30,6 @@ const getUser=async(req,res,next)=>{
 }
 const getUserById = async (req, res) => {
     const { id } = req.params;
-
     try {
         const user = await userService.getUserByIdDB(id);
         if (!user) {
@@ -45,10 +44,31 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { makeby, updateby } = req.body;
+    const {  isactive } = req.body;
 
     try {
-        const user = await userService.updateUserDB(id, makeby, updateby);
+        const user = await userService.updateUserDB(id, isactive);
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+const updateUserMultipleStatus = async (req, res) => {
+    try {
+        // Call the service function to update multiple data
+        const result = await userService.updateUserMultipleStatusDB(req.body);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+const deleteUser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await userService.deleteUserDB(id);
         return res.status(200).json(user);
     } catch (error) {
         console.error(error);
@@ -56,4 +76,5 @@ const updateUser = async (req, res) => {
     }
 };
 
-module.exports={createUser,getUser,getUserById,updateUser}
+
+module.exports={createUser,getUser,getUserById,updateUser,updateUserMultipleStatus,deleteUser}

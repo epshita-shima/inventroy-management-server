@@ -30,6 +30,11 @@ app.use('/serial-getdata',serialGenerate)
 app.use('/user-create',userCreateRoute)
 app.use('/get-user',userCreateRoute)
 app.use('/user',userCreateRoute)
+app.use('/user/update',userCreateRoute)
+app.use('/user/delete',userCreateRoute)
+app.use('/user/updatestatus',userCreateRoute)
+
+
 
 function errorHandler(err, req, res, next) {
   if (res.headersSent) {
