@@ -28,15 +28,15 @@ const getUserDB = async () => {
 };
 
 const getUserByIdDB = async (id) => {
-  console.log(id)
+  console.log(id);
   try {
-      const user = await User.findById(id);
-      if (!user) {
-          throw new Error('User not found');
-      }
-      return user;
+    const user = await User.findById(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
   } catch (error) {
-      throw new Error('Internal server error from service');
+    throw new Error("Internal server error from service");
   }
 };
 
@@ -47,7 +47,7 @@ const updateUserDB = async (id, isactive) => {
       { isactive: isactive },
       { new: true }
     );
-    console.log(user,'service')
+    console.log(user, "service");
     if (!user) {
       throw new Error("User not found");
     }
@@ -59,38 +59,83 @@ const updateUserDB = async (id, isactive) => {
 };
 
 const updateUserMultipleStatusDB = async (dataToUpdate) => {
-  console.log(dataToUpdate)
   try {
     const promises = dataToUpdate.map(async (user) => {
-        // Update isactive field for each user
-        const updatedUser = await User.findByIdAndUpdate(
-            user._id,
-            { isactive: user.isactive },
-            { new: true }
-        );
-        return updatedUser;
+      // Update isactive field for each user
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        { isactive: user.isactive },
+        { new: true }
+      );
+      return updatedUser;
     });
     const updatedUsers = await Promise.all(promises);
     return updatedUsers;
-} catch (error) {
-    console.error('Error updating multiple users:', error);
-    throw new Error('Failed to update multiple data');
-}
+  } catch (error) {
+    console.error("Error updating multiple users:", error);
+    throw new Error("Failed to update multiple data");
+  }
+};
+
+const updateUserMultipleDataDB = async (dataToUpdate) => {
+  try {
+    // Destructure the dataToUpdate object to extract individual fields
+    const {
+      _id,
+      firstname,
+      lastname,
+      mobileNo,
+      username,
+      password,
+      isactive,
+      roleId,
+      menulist,
+    } = dataToUpdate;
+
+    // Construct the update object
+    const updateData = {
+      firstname,
+      lastname,
+      mobileNo,
+      username,
+      password,
+      isactive,
+      roleId,
+      menulist,
+      updatedAt: Date.now(),
+    };
+
+    // Update the user
+    const updatedUser = await User.findByIdAndUpdate(_id, updateData, {
+      new: true,
+    });
+
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating multiple users:", error);
+    throw new Error("Failed to update multiple data");
+  }
 };
 
 const deleteUserDB = async (id) => {
   try {
     const deletedUser = await User.findByIdAndDelete(id);
-    console.log(deletedUser,'delete')
+    console.log(deletedUser, "delete");
     if (!deletedUser) {
       throw new Error("User not found");
     }
     return deletedUser;
-
   } catch (error) {
     throw new Error("Internal server error");
   }
 };
 
-
-module.exports = { createUserToDB, getUserDB, getUserByIdDB,updateUserDB, updateUserMultipleStatusDB,deleteUserDB };
+module.exports = {
+  createUserToDB,
+  getUserDB,
+  getUserByIdDB,
+  updateUserDB,
+  updateUserMultipleStatusDB,
+  updateUserMultipleDataDB,
+  deleteUserDB,
+};

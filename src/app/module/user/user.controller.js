@@ -21,13 +21,14 @@ const createUser=async(req, res,next) => {
             });
         }
     }
-
 };
+
 const getUser=async(req,res,next)=>{
     const data = req.body;
     const user = await userService.getUserDB(data)
     res.json(user);
 }
+
 const getUserById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -54,6 +55,7 @@ const updateUser = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 const updateUserMultipleStatus = async (req, res) => {
     try {
         // Call the service function to update multiple data
@@ -64,6 +66,17 @@ const updateUserMultipleStatus = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+const updateUserMultipleField = async (req, res) => {
+    try {
+        // Call the service function to update multiple data
+        const result = await userService.updateUserMultipleDataDB(req.body);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 const deleteUser = async (req, res) => {
     const { id } = req.params;
 
@@ -77,4 +90,4 @@ const deleteUser = async (req, res) => {
 };
 
 
-module.exports={createUser,getUser,getUserById,updateUser,updateUserMultipleStatus,deleteUser}
+module.exports={createUser,getUser,getUserById,updateUser,updateUserMultipleStatus,updateUserMultipleField,deleteUser}

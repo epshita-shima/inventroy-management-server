@@ -5,6 +5,7 @@ const userRoleRoutes = require("./app/module/userrole/userrole.route");
 const menuItemRoutes=require("./app/module/menus/menu.route");
 const serialGenerate =require('./app/module/serialnogenerate/serialnogenerate.route')
 const userCreateRoute=require('./app/module/user/user.route')
+const companyRoute = require('./app/module/reportdetails/reportdetails.route');
 require("dotenv").config();
 const cors = require("cors");
 
@@ -32,8 +33,10 @@ app.use('/get-user',userCreateRoute)
 app.use('/user',userCreateRoute)
 app.use('/user/update',userCreateRoute)
 app.use('/user/delete',userCreateRoute)
+app.use('/user/status',userCreateRoute)
 app.use('/user/updatestatus',userCreateRoute)
-
+app.use('/reportdata', companyRoute);
+app.use('/reportdata', companyRoute);
 
 
 function errorHandler(err, req, res, next) {
