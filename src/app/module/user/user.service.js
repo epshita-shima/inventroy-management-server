@@ -59,8 +59,9 @@ const updateUserDB = async (id, isactive) => {
 };
 
 const updateUserMultipleStatusDB = async (dataToUpdate) => {
+ 
   try {
-    const promises = dataToUpdate.map(async (user) => {
+    const promises = dataToUpdate?.map(async (user) => {
       // Update isactive field for each user
       const updatedUser = await User.findByIdAndUpdate(
         user._id,

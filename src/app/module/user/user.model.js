@@ -5,7 +5,7 @@ const dropdownSchema = new mongoose.Schema({
   url: { type: String, required: true },
   permissions: [{ type: String }],
   isChecked: { type: Boolean, default: false },
-  dropdown: [this],
+  items: [this],
   trackId: { type: String, required: true },
   insert: { type: Boolean, default: false },
   update: { type: Boolean, default: false },
@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
       url: { type: String, required: true },
       permissions: [{ type: String }], // Change the type based on your requirements
       parentIds: [{ type: String }], // Change the type based on your requirements
-      dropdown: [dropdownSchema],
+      items: [dropdownSchema],
       isChecked: { type: Boolean, default: false },
       insert: { type: Boolean, default: false },
       update: { type: Boolean, default: false },

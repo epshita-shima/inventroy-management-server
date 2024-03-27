@@ -36,7 +36,7 @@ app.use('/user/delete',userCreateRoute)
 app.use('/user/status',userCreateRoute)
 app.use('/user/updatestatus',userCreateRoute)
 app.use('/reportdata', companyRoute);
-app.use('/reportdata', companyRoute);
+app.use('/reportdata/getdata', companyRoute);
 
 
 function errorHandler(err, req, res, next) {
