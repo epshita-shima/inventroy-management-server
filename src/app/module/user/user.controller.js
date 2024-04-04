@@ -55,6 +55,18 @@ const updateUser = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
+const updateUserPassword = async (req, res) => {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    try {
+        const user = await userService.updateUserPasswordDB(id, password);
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 const updateUserMultipleStatus = async (req, res) => {
     try {
@@ -90,4 +102,4 @@ const deleteUser = async (req, res) => {
 };
 
 
-module.exports={createUser,getUser,getUserById,updateUser,updateUserMultipleStatus,updateUserMultipleField,deleteUser}
+module.exports={createUser,getUser,getUserById,updateUser,updateUserMultipleStatus,updateUserMultipleField,deleteUser,updateUserPassword}

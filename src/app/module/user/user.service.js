@@ -58,6 +58,23 @@ const updateUserDB = async (id, isactive) => {
   }
 };
 
+const updateUserPasswordDB = async (id, password) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      { password: password },
+      { new: true }
+    );
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return user;
+  } catch (error) {
+    throw new Error("Internal server error");
+  }
+};
+
 const updateUserMultipleStatusDB = async (dataToUpdate) => {
  
   try {
@@ -105,7 +122,7 @@ const updateUserMultipleDataDB = async (dataToUpdate) => {
       menulist,
       updatedAt: Date.now(),
     };
-
+    console.log(updateData)
     // Update the user
     const updatedUser = await User.findByIdAndUpdate(_id, updateData, {
       new: true,
@@ -139,4 +156,5 @@ module.exports = {
   updateUserMultipleStatusDB,
   updateUserMultipleDataDB,
   deleteUserDB,
+  updateUserPasswordDB
 };
