@@ -3,9 +3,9 @@ const itemSchema = new mongoose.Schema({
   label: { type: String, required: true },
   url: { type: String, required: true },
   permissions: [{ type: String, required: true }],
-  children: [{ type: mongoose.Schema.Types.ObjectId }],
   trackId:{ type: String},
   items: [this],
+  isParent:{ type: Boolean, required: true }
 });
 const menuItemSchema = new mongoose.Schema({
     label: { type: String, required: true },
@@ -13,7 +13,7 @@ const menuItemSchema = new mongoose.Schema({
     permissions: [{ type: String, required: true }],
     children: [{ type: mongoose.Schema.Types.ObjectId }],
     items: [itemSchema],
-
+    isParent: { type: Boolean, required: true },
     createdAt: {
       type: Date,
       default: Date.now,
