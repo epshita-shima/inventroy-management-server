@@ -8,6 +8,8 @@ const getMenuItems=async(req,res,next)=>{
 
 const updateMenuItems=async (req, res) => {
     try {
+      const {_id,items} = await menuItemService.updateMenuDB(req.body)
+      console.log(_id,items)
       const result = await menuItemService.updateMenuDB(req.body);
       return res.status(200).json(result);
     } catch (error) {

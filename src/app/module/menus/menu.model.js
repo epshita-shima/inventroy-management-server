@@ -1,10 +1,11 @@
 const mongoose=require('mongoose')
 const itemSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   label: { type: String, required: true },
   url: { type: String, required: true },
   permissions: [{ type: String, required: true }],
   trackId:{ type: String},
-  items: [this],
+  items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
   isParent:{ type: Boolean, required: true }
 });
 const menuItemSchema = new mongoose.Schema({
@@ -23,7 +24,6 @@ const menuItemSchema = new mongoose.Schema({
       default: Date.now,
     },
 });
-
-const Item = mongoose.model('Item', itemSchema);
+const Item = mongoose.model('Item',itemSchema);
 const MenuItem = mongoose.model('menu', menuItemSchema);
 module.exports={MenuItem,Item}
