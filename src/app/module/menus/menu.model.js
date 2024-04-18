@@ -5,9 +5,10 @@ const itemSchema = new mongoose.Schema({
   url: { type: String, required: true },
   permissions: [{ type: String, required: true }],
   trackId:{ type: String},
-  items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
+  items: [this],
   isParent:{ type: Boolean, required: true }
 });
+
 const menuItemSchema = new mongoose.Schema({
     label: { type: String, required: true },
     url: { type: String, required: true },
@@ -23,6 +24,7 @@ const menuItemSchema = new mongoose.Schema({
       type: Date,
       default: Date.now,
     },
+    trackId:{ type: String},
 });
 const Item = mongoose.model('Item',itemSchema);
 const MenuItem = mongoose.model('menu', menuItemSchema);
