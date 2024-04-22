@@ -11,6 +11,7 @@ const dropdownSchema = new mongoose.Schema({
   update: { type: Boolean, default: false },
   delete: { type: Boolean, default: false },
   pdf: { type: Boolean, default: false },
+  isParent:{ type: Boolean, required: true }
 });
 const userSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
@@ -33,6 +34,7 @@ const userSchema = new mongoose.Schema({
       update: { type: Boolean, default: false },
       delete: { type: Boolean, default: false },
       pdf: { type: Boolean, default: false },
+      isParent:{ type: Boolean, required: true }
     },
   ],
   makeby: { type: String },

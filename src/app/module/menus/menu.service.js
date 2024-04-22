@@ -10,60 +10,6 @@ const getMenuItemDB = async () => {
   }
 };
 
-// const updateMenuDB = async (newItem) => {
-//   console.log(newItem._id)
-//   try {
-//     const parentMenu = await MenuItem.MenuItem.findOne({ _id: newItem._id });
-
-//     if (parentMenu == null || parentMenu == undefined) {
-//       console.log(newItem._id);
-//       const parentNestedMenu = await MenuItem.MenuItem.findOne({
-//         "items._id": newItem._id,
-//       });
-
-//       if (!parentNestedMenu) {
-//         throw new Error("Parent menu not found.");
-//       }
-//       const childMenu = parentNestedMenu.items.find(
-//         (item) => item._id.toString() === newItem._id
-//       );
-//       console.log('childname search',childMenu)
-//       for (const item of newItem.items) {
-//         const newItemDoc = new MenuItem.Item(item);
-
-//         await newItemDoc.save({ suppressWarning: true });
-//         childMenu.items = [];
-//         childMenu.items.push(newItemDoc);
-//         parentNestedMenu.items.push(childMenu);
-//         console.log('parentNestedMenu',parentNestedMenu)
-//       }
-//       console.log('parentNestedMenu',parentNestedMenu)
-//   await MenuItem.MenuItem.findByIdAndUpdate(parentNestedMenu._id, parentNestedMenu, {
-//         new: true,
-//       });
-
-// return parentNestedMenu
-//       //  await parentNestedMenu.save({
-//       //   suppressWarning: true,
-//       // });
-
-//       // return parentNestedMenu;
-//     } else {
-//       for (const item of newItem.items) {
-//         const newItemDoc = new MenuItem.Item(item);
-//         await newItemDoc.save({ suppressWarning: true });
-//         parentMenu.items.push(newItemDoc);
-//       }
-//       await parentMenu.save({
-//         suppressWarning: true,
-//       });
-
-//       return  parentMenu;
-//     }
-//   } catch (error) {
-//     throw new Error("Error inserting menu item: " + error.message);
-//   }
-// };
 const updateMenuDB = async (newItem) => {
   try {
     let parentMenu;
@@ -74,41 +20,46 @@ const updateMenuDB = async (newItem) => {
         "items._id": newItem._id,
       });
       if (parentMenu==null) {
-        parentNestedMenu = await MenuItem.MenuItem.findOne(
+     const  parentNestedMenu = await MenuItem.MenuItem.findOne(
           { "items.items._id": new ObjectId(newItem._id) }
         );
-        console.log('test data',parentNestedMenu.items)
-        const childMenu = parentNestedMenu.items.find(
-          (item) =>( item._id.toString() === newItem.trackId)
-        );
-        const childNestedMenu = childMenu.items.find(
-          (item) =>( item._id.toString() === newItem._id)
-        );
-   
+    if(parentNestedMenu ==null){
+console.log('parentNestedMenu',parentNestedMenu)
+    }
+    else{
+      const childMenu = parentNestedMenu.items.find(
+        (item) =>( item._id.toString() === newItem.trackId)
+      );
+      const childNestedMenu = childMenu.items.find(
+        (item) =>( item._id.toString() === newItem._id)
+      );
+ 
 
-        for (const item of newItem.items) {
-          // Check if the item already exists in the child menu
-          const existingItemIndex = childNestedMenu.items.findIndex(
-            (existingItem) => existingItem._id.toString() === item._id
-          );
+      for (const item of newItem.items) {
+        // Check if the item already exists in the child menu
+        const existingItemIndex = childNestedMenu.items.findIndex(
+          (existingItem) => existingItem._id.toString() === item._id
+        );
 
-          // If the item exists, update it; otherwise, create a new document for it
-          if (existingItemIndex !== -1) {
-            // Update existing item
-            childNestedMenu.items[existingItemIndex].label = item.label; // Update other properties as needed
-          } else {
-            // Create a new document for the item
-            const newItemDoc = new MenuItem.Item(item);
-            await newItemDoc.save({ suppressWarning: true });
-            childNestedMenu.items.push(newItemDoc);
-            // parentNestedMenu.items.push(newItemDoc);
-          }
+        // If the item exists, update it; otherwise, create a new document for it
+        if (existingItemIndex !== -1) {
+          // Update existing item
+          childNestedMenu.items[existingItemIndex].label = item.label; // Update other properties as needed
+        } else {
+          // Create a new document for the item
+          const newItemDoc = new MenuItem.Item(item);
+          await newItemDoc.save({ suppressWarning: true });
+          childNestedMenu.items.push(newItemDoc);
+          // parentNestedMenu.items.push(newItemDoc);
         }
+      }
+     
+      await MenuItem.MenuItem.findByIdAndUpdate(parentNestedMenu._id, parentNestedMenu, {
+        new: true,
+      });
+      return parentNestedMenu;
+    }
        
-        await MenuItem.MenuItem.findByIdAndUpdate(parentNestedMenu._id, parentNestedMenu, {
-          new: true,
-        });
-        return parentNestedMenu;
       } else {
         const childMenu = parentMenu.items.find(
           (item) => item._id.toString() === newItem._id
