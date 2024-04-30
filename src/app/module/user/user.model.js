@@ -7,10 +7,10 @@ const dropdownSchema = new mongoose.Schema({
   isChecked: { type: Boolean, default: false },
   items: [this],
   trackId: { type: String, required: true },
-  insert: { type: Boolean, default: false },
-  update: { type: Boolean, default: false },
-  delete: { type: Boolean, default: false },
-  pdf: { type: Boolean, default: false },
+  isInserted: { type: Boolean, default: false },
+  isUpdated: { type: Boolean, default: false },
+  isRemoved: { type: Boolean, default: false },
+  isPDF: { type: Boolean, default: false },
   isParent:{ type: Boolean, required: true }
 });
 const userSchema = new mongoose.Schema({
@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
       parentIds: [{ type: String }], // Change the type based on your requirements
       items: [dropdownSchema],
       isChecked: { type: Boolean, default: false },
-      insert: { type: Boolean, default: false },
-      update: { type: Boolean, default: false },
-      delete: { type: Boolean, default: false },
-      pdf: { type: Boolean, default: false },
+      isInserted: { type: Boolean, default: false },
+      isUpdated: { type: Boolean, default: false },
+      isRemoved: { type: Boolean, default: false },
+      isPDF: { type: Boolean, default: false },
       isParent:{ type: Boolean, required: true }
     },
   ],

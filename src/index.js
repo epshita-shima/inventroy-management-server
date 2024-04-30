@@ -25,9 +25,13 @@ app.use('/todo',todoHandler)
 app.use('/userrole',userRoleRoutes)
 app.use('/userrole',userRoleRoutes)
 app.use('/getuserrole',userRoleRoutes)
+
 app.use('/menuitems',menuItemRoutes)
 app.use('/menuitems/update',menuItemRoutes)
 app.use('/menuitems/create',menuItemRoutes)
+app.use('/menuitems',menuItemRoutes)
+app.use('/menuitems/updatesingle-menu',menuItemRoutes)
+app.use('/menuitems/singlemenu',menuItemRoutes)
 
 app.use('/serial-create',serialGenerate)
 app.use('/serial-getdata',serialGenerate)
