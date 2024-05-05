@@ -28,12 +28,27 @@ async function createMenuItems(req, res) {
 const getMenuById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await menuItemService.getMenuByIdDB(id);
-    console.log(user);
-    if (!user) {
+    const menu = await menuItemService.getMenuByIdDB(id);
+    console.log(menu);
+    if (!menu) {
       return res.status(404).json({ message: "Menu not found" });
     }
-    return res.status(200).json(user);
+    return res.status(200).json(menu);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+const getMenuChangingParentById = async (req, res) => {
+  const {id} = req.params
+  console.log('singlechangingparent',id)
+  try {
+    const menu = await menuItemService.getMenuChangingParentByIdDB(id);
+    console.log(menu);
+    if (!menu) {
+      return res.status(404).json({ message: "Menu not found" });
+    }
+    return res.status(200).json(menu);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal server error" });
@@ -55,7 +70,9 @@ const updatedSingleMenuItems = async (req, res) => {
 const updateSinglePortionMenuUpdate = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id)
     const updatedItemData = req.body; // Assuming the updated data is sent in the request body
+    console.log('updatedItemData',updatedItemData)
     const result = await menuItemService.updateSingleMenuDataDB(id,updatedItemData);
     res.status(200).json(result);
   } catch (error) {
@@ -70,4 +87,5 @@ module.exports = {
   getMenuById,
   updatedSingleMenuItems,
   updateSinglePortionMenuUpdate,
+  getMenuChangingParentById
 };

@@ -136,10 +136,85 @@ const getMenuByIdDB = async (id) => {
       console.log("parentNestedMenu", parentNestedMenu);
       if (parentNestedMenu == null) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items._id": new ObjectId(id),
+          "items.items._id": id,
         });
-        console.log("childNestedMenu", childNestedMenu);
-        // throw new Error("User not found");
+     
+    
+        // const filteredItems = (childNestedMenu, itemId) => {
+        //   // Iterate over the items array to find the item with the matching _id
+        //   for (const item of childNestedMenu.items) {
+        //     if (item._id === itemId) {
+        //       return item; // Return the found item
+        //     }
+
+        //     // If the item has nested items, recursively search for the target item
+        //     if (item.items && item.items.length > 0) {
+        //       const nestedItem = this.findItemById(item, itemId);
+        //       if (nestedItem) {
+        //         return nestedItem; // Return the found nested item
+        //       }
+        //     }
+        //   }
+
+        //   return null; // Return null if item not found
+        // };
+        // const filterItemsData=filteredItems(childNestedMenu, itemId)
+        // console.log("filteredItems", filterItemsData);
+        // console.log("childNestedMenu", childNestedMenu);
+        if (!childNestedMenu) {
+          throw new Error("Menu not found");
+        }
+        return childNestedMenu;
+      } else {
+        return parentNestedMenu;
+      }
+    } else {
+      return parentMenu;
+    }
+  } catch (error) {
+    throw new Error("Internal server error from service");
+  }
+};
+const getMenuChangingParentByIdDB = async (id) => {
+  console.log(id);
+  try {
+    const parentMenu = await MenuItem.MenuItem.findById(id);
+    console.log("parentMenu", parentMenu);
+    if (parentMenu == null) {
+      const parentNestedMenu = await MenuItem.MenuItem.findOne({
+        "items._id": id,
+      });
+      console.log("parentNestedMenu", parentNestedMenu);
+      if (parentNestedMenu == null) {
+        const childNestedMenu = await MenuItem.MenuItem.findOne({
+          "items.items._id": id,
+        });
+     
+    
+        // const filteredItems = (childNestedMenu, itemId) => {
+        //   // Iterate over the items array to find the item with the matching _id
+        //   for (const item of childNestedMenu.items) {
+        //     if (item._id === itemId) {
+        //       return item; // Return the found item
+        //     }
+
+        //     // If the item has nested items, recursively search for the target item
+        //     if (item.items && item.items.length > 0) {
+        //       const nestedItem = this.findItemById(item, itemId);
+        //       if (nestedItem) {
+        //         return nestedItem; // Return the found nested item
+        //       }
+        //     }
+        //   }
+
+        //   return null; // Return null if item not found
+        // };
+        // const filterItemsData=filteredItems(childNestedMenu, itemId)
+        // console.log("filteredItems", filterItemsData);
+        // console.log("childNestedMenu", childNestedMenu);
+        if (!childNestedMenu) {
+          throw new Error("Menu not found");
+        }
         return childNestedMenu;
       } else {
         return parentNestedMenu;
@@ -210,44 +285,52 @@ const updateSingleMenuDataDB = async (id, data) => {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
         "items._id": id,
       });
-     
-      if(!parentNestedMenu){
+
+      if (!parentNestedMenu) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
           "items.items_id": id,
         });
-        
-        if(!childNestedMenu){
+
+        if (!childNestedMenu) {
           throw new Error("Error inserting menu item: " + error.message);
-        }
-        else{
-          const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(id, data, { new: true });
+        } else {
+          const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(
+            id,
+            data,
+            { new: true }
+          );
           if (updatedItem) {
-              console.log('Updated Item:', updatedItem);
-              return updatedItem;
+            console.log("Updated Item:", updatedItem);
+            return updatedItem;
           } else {
-              console.log('No matching document found for ID:', id);
-              return null;
+            console.log("No matching document found for ID:", id);
+            return null;
           }
         }
-      }
-      else{
-        const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate({"items._id":id}, data, { new: true });
+      } else {
+        const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(
+          id,
+          data,
+          { new: true }
+        );
         if (updatedItem) {
-            console.log('Updated nested parent Item:', updatedItem);
-            return updatedItem;
+          console.log("Updated nested parent Item:", updatedItem);
+          return updatedItem;
         } else {
-            console.log('No matching document found for ID:', id);
-            return null;
+          console.log("No matching document found for ID:", id);
+          return null;
         }
       }
     } else {
-      const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(id, data, { new: true });
+      const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(id, data, {
+        new: true,
+      });
       if (updatedItem) {
-          console.log('Updated Item:', updatedItem);
-          return updatedItem;
+        console.log("Updated Item:", updatedItem);
+        return updatedItem;
       } else {
-          console.log('No matching document found for ID:', id);
-          return null;
+        console.log("No matching document found for ID:", id);
+        return null;
       }
     }
   } catch (error) {
@@ -262,4 +345,5 @@ module.exports = {
   getMenuByIdDB,
   updateSingleMenuDB,
   updateSingleMenuDataDB,
+  getMenuChangingParentByIdDB
 };
