@@ -18,13 +18,11 @@ const updateMenuDB = async (newItem) => {
       parentMenu = await MenuItem.MenuItem.findOne({
         "items._id": newItem._id,
       });
-      console.log("parentmenu", parentMenu);
       if (parentMenu == null) {
         const parentNestedMenu = await MenuItem.MenuItem.findOne({
           "items.items._id": new ObjectId(newItem._id),
         });
         if (parentNestedMenu == null) {
-          console.log("parentNestedMenu", parentNestedMenu);
         } else {
           const childMenu = parentNestedMenu.items.find(
             (item) => item._id.toString() === newItem.trackId
@@ -65,10 +63,8 @@ const updateMenuDB = async (newItem) => {
         const childMenu = parentMenu.items.find(
           (item) => item._id.toString() === newItem._id
         );
-        console.log("childMenu", childMenu);
 
         for (const item of newItem.items) {
-          console.log("item", item);
           // Check if the item already exists in the child menu
           const existingItemIndex = childMenu.items.findIndex(
             (existingItem) => existingItem._id.toString() === item._id
@@ -89,7 +85,7 @@ const updateMenuDB = async (newItem) => {
         await MenuItem.MenuItem.findByIdAndUpdate(parentMenu._id, parentMenu, {
           new: true,
         });
-        console.log("2nd parent", parentMenu);
+      
         return parentMenu;
       }
     } else {
@@ -116,7 +112,6 @@ const updateMenuDB = async (newItem) => {
 };
 
 async function insertMenuItems(menuItems) {
-  console.log(menuItems);
   try {
     return await MenuItem.MenuItem.insertMany(menuItems);
   } catch (error) {
@@ -125,42 +120,18 @@ async function insertMenuItems(menuItems) {
 }
 
 const getMenuByIdDB = async (id) => {
-  console.log(id);
+
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
-    console.log("parentMenu", parentMenu);
     if (parentMenu == null) {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
         "items._id": id,
       });
-      console.log("parentNestedMenu", parentNestedMenu);
       if (parentNestedMenu == null) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items._id": id,
+          "items.items._id":new ObjectId(id)
         });
-     
-    
-        // const filteredItems = (childNestedMenu, itemId) => {
-        //   // Iterate over the items array to find the item with the matching _id
-        //   for (const item of childNestedMenu.items) {
-        //     if (item._id === itemId) {
-        //       return item; // Return the found item
-        //     }
-
-        //     // If the item has nested items, recursively search for the target item
-        //     if (item.items && item.items.length > 0) {
-        //       const nestedItem = this.findItemById(item, itemId);
-        //       if (nestedItem) {
-        //         return nestedItem; // Return the found nested item
-        //       }
-        //     }
-        //   }
-
-        //   return null; // Return null if item not found
-        // };
-        // const filterItemsData=filteredItems(childNestedMenu, itemId)
-        // console.log("filteredItems", filterItemsData);
-        // console.log("childNestedMenu", childNestedMenu);
+       
         if (!childNestedMenu) {
           throw new Error("Menu not found");
         }
@@ -172,46 +143,24 @@ const getMenuByIdDB = async (id) => {
       return parentMenu;
     }
   } catch (error) {
+    console.error(error);
     throw new Error("Internal server error from service");
   }
 };
+
 const getMenuChangingParentByIdDB = async (id) => {
-  console.log(id);
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
-    console.log("parentMenu", parentMenu);
     if (parentMenu == null) {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
         "items._id": id,
       });
-      console.log("parentNestedMenu", parentNestedMenu);
+    
       if (parentNestedMenu == null) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items._id": id,
+          "items.items._id": new ObjectId(id)
         });
-     
-    
-        // const filteredItems = (childNestedMenu, itemId) => {
-        //   // Iterate over the items array to find the item with the matching _id
-        //   for (const item of childNestedMenu.items) {
-        //     if (item._id === itemId) {
-        //       return item; // Return the found item
-        //     }
 
-        //     // If the item has nested items, recursively search for the target item
-        //     if (item.items && item.items.length > 0) {
-        //       const nestedItem = this.findItemById(item, itemId);
-        //       if (nestedItem) {
-        //         return nestedItem; // Return the found nested item
-        //       }
-        //     }
-        //   }
-
-        //   return null; // Return null if item not found
-        // };
-        // const filterItemsData=filteredItems(childNestedMenu, itemId)
-        // console.log("filteredItems", filterItemsData);
-        // console.log("childNestedMenu", childNestedMenu);
         if (!childNestedMenu) {
           throw new Error("Menu not found");
         }
@@ -228,7 +177,6 @@ const getMenuChangingParentByIdDB = async (id) => {
 };
 
 const updateSingleMenuDB = async (dataToUpdate) => {
-  console.log(dataToUpdate);
   try {
     // Destructure the dataToUpdate object to extract individual fields
     const {
@@ -261,7 +209,7 @@ const updateSingleMenuDB = async (dataToUpdate) => {
       isPDF,
       updatedAt: Date.now(),
     };
-    console.log(updateData);
+   
     // Update the user
     const updatedUser = await MenuItem.MenuItem.findByIdAndUpdate(
       _id,
@@ -277,6 +225,7 @@ const updateSingleMenuDB = async (dataToUpdate) => {
     throw new Error("Failed to isUpdated multiple data");
   }
 };
+
 const updateSingleMenuDataDB = async (id, data) => {
   try {
     let parentMenu;
@@ -288,7 +237,7 @@ const updateSingleMenuDataDB = async (id, data) => {
 
       if (!parentNestedMenu) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items_id": id,
+          "items.items._id": id,
         });
 
         if (!childNestedMenu) {
@@ -296,11 +245,10 @@ const updateSingleMenuDataDB = async (id, data) => {
         } else {
           const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(
             id,
-            data,
+           {$set:data},
             { new: true }
           );
           if (updatedItem) {
-            console.log("Updated Item:", updatedItem);
             return updatedItem;
           } else {
             console.log("No matching document found for ID:", id);
@@ -310,11 +258,11 @@ const updateSingleMenuDataDB = async (id, data) => {
       } else {
         const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(
           id,
-          data,
+          {$set:data},
           { new: true }
         );
+
         if (updatedItem) {
-          console.log("Updated nested parent Item:", updatedItem);
           return updatedItem;
         } else {
           console.log("No matching document found for ID:", id);
@@ -322,11 +270,12 @@ const updateSingleMenuDataDB = async (id, data) => {
         }
       }
     } else {
-      const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(id, data, {
+      const updatedItem = await MenuItem.MenuItem.findByIdAndUpdate(id, 
+        {$set:data},
+        {
         new: true,
       });
       if (updatedItem) {
-        console.log("Updated Item:", updatedItem);
         return updatedItem;
       } else {
         console.log("No matching document found for ID:", id);
@@ -338,6 +287,105 @@ const updateSingleMenuDataDB = async (id, data) => {
     throw new Error("Failed to isUpdated multiple data");
   }
 };
+const updateMenuNestedItemsDB = async (data) => {
+  try {
+    // Remove the item from the previous array
+    let parentMenu;
+    parentMenu = await MenuItem.MenuItem.findOne({ _id: data.singleMenuData._id });
+    if (!parentMenu) {
+      const parentNestedMenu = await MenuItem.MenuItem.findOne({
+        "items._id": data.singleMenuData._id,
+      });
+      if (!parentNestedMenu) {
+        const childNestedMenu = await MenuItem.MenuItem.findOne({
+          "items.items_id":ObjectId(data.singleMenuData._id),
+        });
+        if (!childNestedMenu) {
+          throw new Error("Error inserting menu item: " + error.message);
+        } else {
+          const data1 = await MenuItem.MenuItem.findOneAndUpdate(
+            { _id: data.singleMenu._id },
+            // Find the document containing the item to remove
+            { $pull: { items: { _id: data.singleMenuData._id } } }, // Pull the item from the array
+            // // Pass the session to the operation
+            // { returnOriginal: false }
+            { new: true }
+          );
+          const data2 = await MenuItem.MenuItem.findOneAndUpdate(
+            { _id: data.singleMenuData._id }, // Find the document by its _id
+            { $set: data.singleMenuData }, // Update the document with the new data
+            // Pass the session to the operation
+            { returnOriginal: false }
+          );
+          return {data1,data2}
+        }
+      } else {
+        const data1 = await MenuItem.MenuItem.findOneAndUpdate(
+          { _id: data.singleMenu._id },
+          // Find the document containing the item to remove
+          { $pull: { items: { _id: data.singleMenuData.items.filter((item)=>item._id) } } }, // Pull the item from the array
+          // // Pass the session to the operation
+          // { returnOriginal: false }
+          { new: true }
+        );
+        const data2 = await MenuItem.MenuItem.findOneAndUpdate(
+          { _id: data.singleMenuData._id }, // Find the document by its _id
+          { $set: data.singleMenuData.items }, // Update the document with the new data
+          // Pass the session to the operation
+          { returnOriginal: false }
+        );
+        return {data1,data2}
+      }
+    } else {
+      const data1 = await MenuItem.MenuItem.findOneAndUpdate(
+        { _id: data.singleMenu._id },
+        // Find the document containing the item to remove
+        { $pull: { items: { _id: data.singleMenuData.items.filter((item)=>item._id) } } }, // Pull the item from the array
+        // // Pass the session to the operation
+        // { returnOriginal: false }
+        { new: true }
+      );
+      
+     
+      const data2 = await MenuItem.MenuItem.findOneAndUpdate(
+        { _id: data.singleMenuData._id }, // Find the document by its _id
+        { $push: { items:  data.singleMenuData.items  } }, // Update the document with the new data
+        // Pass the session to the operation
+        { returnOriginal: false }
+      );
+   
+      return {data1,data2}
+    }
+  } catch (error) {
+    throw new Error("Error updating menu item: " + error.message);
+  }
+};
+const deleteMenuDB = async (id) => {
+  try {
+    const deletedParentMenu = await MenuItem.MenuItem.findByIdAndDelete(id);
+    if(deletedParentMenu==null){
+      const deletedNestedParentMenu = await MenuItem.MenuItem.updateOne({ 'items._id': id }, { $pull: { items: { _id: id } } });
+      if(!deletedNestedParentMenu){
+        const deletedNestedChildMenu = await MenuItem.MenuItem.updateOne({ 'items.items._id': id }, { $pull: { 'items.items': { _id: id } } });
+        if(!deletedNestedChildMenu){
+          throw new Error("User not found");
+        }
+        else{
+          return deletedNestedChildMenu
+        }
+      }
+      else{
+        return deletedNestedParentMenu
+      }
+    }
+    else{
+      return deletedParentMenu;
+    }
+   
+  } catch (error) {
+    throw new Error("Internal server error");
+  }
+};
 module.exports = {
   getMenuItemDB,
   insertMenuItems,
@@ -345,5 +393,7 @@ module.exports = {
   getMenuByIdDB,
   updateSingleMenuDB,
   updateSingleMenuDataDB,
-  getMenuChangingParentByIdDB
+  getMenuChangingParentByIdDB,
+  updateMenuNestedItemsDB,
+  deleteMenuDB
 };

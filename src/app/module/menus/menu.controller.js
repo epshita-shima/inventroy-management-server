@@ -7,8 +7,10 @@ const getMenuItems = async (req, res, next) => {
 };
 
 const updateMenuItems = async (req, res) => {
+  
   try {
     const result = await menuItemService.updateMenuDB(req.body);
+    console.log('result',result)
     return res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -19,6 +21,7 @@ async function createMenuItems(req, res) {
   try {
     const menuItems = req.body;
     const insertedItems = await menuItemService.insertMenuItems(menuItems);
+    console.log('create menu',insertedItems)
     res.status(201).json(insertedItems);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -29,7 +32,6 @@ const getMenuById = async (req, res) => {
   const { id } = req.params;
   try {
     const menu = await menuItemService.getMenuByIdDB(id);
-    console.log(menu);
     if (!menu) {
       return res.status(404).json({ message: "Menu not found" });
     }
@@ -80,6 +82,25 @@ const updateSinglePortionMenuUpdate = async (req, res) => {
   }
 };
 
+const updateMenuNestedItemsController=async(req,res)=>{
+  try {
+    const result = await menuItemService.updateMenuNestedItemsDB(req.body);
+    console.log('resultcontroller',result.data2.items)
+    res.status(200).json(result.data1,result.data2);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+const deleteMenuController = async (req, res) => {
+  const { id } = req.params;
+  try {
+      const menu = await menuItemService.deleteMenuDB(id);
+      return res.status(200).json(menu);
+  } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+  }
+};
 module.exports = {
   getMenuItems,
   createMenuItems,
@@ -87,5 +108,7 @@ module.exports = {
   getMenuById,
   updatedSingleMenuItems,
   updateSinglePortionMenuUpdate,
-  getMenuChangingParentById
+  getMenuChangingParentById,
+  updateMenuNestedItemsController,
+  deleteMenuController
 };

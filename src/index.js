@@ -33,6 +33,8 @@ app.use('/menuitems',menuItemRoutes)
 app.use('/menuitems/updatesingle-menu',menuItemRoutes)
 app.use('/menuitems/singlemenu',menuItemRoutes)
 app.use('/menuitems/singlemenu/changingparent',menuItemRoutes)
+app.use('/menuitems/deletemenu',menuItemRoutes)
+// app.use('/menuitems/updatenesteditems',menuItemRoutes)
 
 app.use('/serial-create',serialGenerate)
 app.use('/serial-getdata',serialGenerate)
