@@ -22,7 +22,7 @@ async function createMenuItems(req, res) {
     const menuItems = req.body;
     const insertedItems = await menuItemService.insertMenuItems(menuItems);
     console.log('create menu',insertedItems)
-    res.status(201).json(insertedItems);
+    res.status(200).json(insertedItems);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -85,8 +85,8 @@ const updateSinglePortionMenuUpdate = async (req, res) => {
 const updateMenuNestedItemsController=async(req,res)=>{
   try {
     const result = await menuItemService.updateMenuNestedItemsDB(req.body);
-    console.log('resultcontroller',result.data2.items)
-    res.status(200).json(result.data1,result.data2);
+    console.log('resultcontroller', result.data2.items);
+    res.status(200).json({ data1: result.data1, data2: result.data2 });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

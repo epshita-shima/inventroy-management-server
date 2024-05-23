@@ -13,15 +13,17 @@ const updateMenuDB = async (newItem) => {
   try {
     let parentMenu;
     parentMenu = await MenuItem.MenuItem.findOne({ _id: newItem._id });
-
+console.log(" parentMenu", parentMenu)
     if (!parentMenu) {
-      parentMenu = await MenuItem.MenuItem.findOne({
+    const  parentMenuData = await MenuItem.MenuItem.findOne({
         "items._id": newItem._id,
       });
-      if (parentMenu == null) {
+      console.log('parentMenuData',parentMenuData)
+      if (parentMenuData == null) {
         const parentNestedMenu = await MenuItem.MenuItem.findOne({
           "items.items._id": new ObjectId(newItem._id),
         });
+        console.log('parentNestedMenu',parentNestedMenu)
         if (parentNestedMenu == null) {
         } else {
           const childMenu = parentNestedMenu.items.find(
@@ -63,7 +65,7 @@ const updateMenuDB = async (newItem) => {
         const childMenu = parentMenu.items.find(
           (item) => item._id.toString() === newItem._id
         );
-
+console.log('childmenu',childMenu)
         for (const item of newItem.items) {
           // Check if the item already exists in the child menu
           const existingItemIndex = childMenu.items.findIndex(
@@ -93,16 +95,17 @@ const updateMenuDB = async (newItem) => {
         const existingItemIndex = parentMenu.items.findIndex(
           (existingItem) => existingItem._id.toString() === item._id
         );
-
+console.log("existingItemIndex",existingItemIndex)
         if (existingItemIndex !== -1) {
           parentMenu.items[existingItemIndex].label = item.label;
         } else {
           const newItemDoc = new MenuItem.Item(item);
+          console.log('newItemDoc',newItemDoc)
           await newItemDoc.save({ suppressWarning: true });
           parentMenu.items.push(newItemDoc);
         }
       }
-
+console.log("parentMenu",parentMenu)
       await parentMenu.save({ suppressWarning: true });
       return parentMenu;
     }
