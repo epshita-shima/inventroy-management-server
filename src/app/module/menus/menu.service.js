@@ -301,7 +301,7 @@ const updateMenuNestedItemsDB = async (data) => {
       });
       if (!parentNestedMenu) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items_id":ObjectId(data.singleMenuData._id),
+          "items.items_id":new ObjectId(data.singleMenuData._id),
         });
         if (!childNestedMenu) {
           throw new Error("Error inserting menu item: " + error.message);
@@ -364,12 +364,15 @@ const updateMenuNestedItemsDB = async (data) => {
   }
 };
 const deleteMenuDB = async (id) => {
+  console.log(id)
   try {
     const deletedParentMenu = await MenuItem.MenuItem.findByIdAndDelete(id);
     if(deletedParentMenu==null){
       const deletedNestedParentMenu = await MenuItem.MenuItem.updateOne({ 'items._id': id }, { $pull: { items: { _id: id } } });
+      console.log("deletedNestedParentMenu",deletedNestedParentMenu)
       if(!deletedNestedParentMenu){
-        const deletedNestedChildMenu = await MenuItem.MenuItem.updateOne({ 'items.items._id': id }, { $pull: { 'items.items': { _id: id } } });
+        const deletedNestedChildMenu = await MenuItem.MenuItem.updateOne({ 'items.items._id': new ObjectId(id) }, { $pull: { 'items.items': { _id: id } } });
+        console.log("deletedNestedChildMenu",deletedNestedChildMenu)
         if(!deletedNestedChildMenu){
           throw new Error("User not found");
         }
