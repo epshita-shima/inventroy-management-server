@@ -21,7 +21,6 @@ async function createMenuItems(req, res) {
   try {
     const menuItems = req.body;
     const insertedItems = await menuItemService.insertMenuItems(menuItems);
-    console.log('create menu',insertedItems)
     res.status(200).json(insertedItems);
   } catch (error) {
     res.status(500).json({ error: error.message });

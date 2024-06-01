@@ -1,11 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const todoHandler=require('./routeHandler/todoHandler')
+// const { MongoClient } = require("mongoose");
 const userRoleRoutes = require("./app/module/userrole/userrole.route");
 const menuItemRoutes=require("./app/module/menus/menu.route");
 const serialGenerate =require('./app/module/serialnogenerate/serialnogenerate.route')
 const userCreateRoute=require('./app/module/user/user.route')
 const companyRoute = require('./app/module/reportdetails/reportdetails.route');
+const itemsizeRoute=require('./app/module/itemsize/itemsize.route')
 require("dotenv").config();
 const cors = require("cors");
 
@@ -15,13 +16,25 @@ app.use(cors());
 app.use(express.json());
 const port = 5000;
 
+const uri = process.env.MONGO_URI;
+
+if (!uri) {
+  console.error('Error: MongoDB URI is not defined in the environment variables');
+  process.exit(1);
+}
+
+mongoose.Promise = global.Promise;
 mongoose
-  .connect("mongodb://127.0.0.1:27017/inventory")
-  .then(() => console.log("connection successfull"))
+  .connect(uri)
+  .then(() =>{ 
+    console.log("connection successfull");
+  })
   .catch((err) => console.log(err));
 
+
+  // connect(process.env.MONGO_URI)
+  // MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 // application route
-app.use('/todo',todoHandler)
 app.use('/userrole',userRoleRoutes)
 app.use('/userrole',userRoleRoutes)
 app.use('/getuserrole',userRoleRoutes)
@@ -34,7 +47,7 @@ app.use('/menuitems/updatesingle-menu',menuItemRoutes)
 app.use('/menuitems/singlemenu',menuItemRoutes)
 app.use('/menuitems/singlemenu/changingparent',menuItemRoutes)
 app.use('/menuitems/deletemenu',menuItemRoutes)
-// app.use('/menuitems/updatenesteditems',menuItemRoutes)
+app.use('/menuitems/updatenesteditems',menuItemRoutes)
 
 app.use('/serial-create',serialGenerate)
 app.use('/serial-getdata',serialGenerate)
@@ -49,13 +62,16 @@ app.use('/user/updatestatus',userCreateRoute)
 app.use('/reportdata', companyRoute);
 app.use('/reportdata/getdata', companyRoute);
 
+app.use('/itemzise',itemsizeRoute)
 
-function errorHandler(err, req, res, next) {
-  if (res.headersSent) {
-    return next(err);
-  }
-  res.status(500).json({ error: err });
-}
+
+
+// function errorHandler(err, req, res, next) {
+//   if (res.headersSent) {
+//     return next(err);
+//   }
+//   res.status(500).json({ error: err });
+// }
 
 app.get('/', (req, res) => {
   res.send('Running inventory management');

@@ -1,8 +1,10 @@
 const MenuItem = require("./menu.model");
 const { ObjectId } = require("mongodb");
+
 const getMenuItemDB = async () => {
   try {
     const menuitem = await MenuItem.MenuItem.find();
+    console.log('menuitem',menuitem);
     return menuitem;
   } catch (error) {
     console.error("Error fetching menu:", error);
@@ -62,16 +64,15 @@ console.log(" parentMenu", parentMenu)
           return parentNestedMenu;
         }
       } else {
-        const childMenu = parentMenu.items.find(
+        const childMenu = parentMenuData.items.find(
           (item) => item._id.toString() === newItem._id
         );
-console.log('childmenu',childMenu)
         for (const item of newItem.items) {
           // Check if the item already exists in the child menu
           const existingItemIndex = childMenu.items.findIndex(
             (existingItem) => existingItem._id.toString() === item._id
           );
-
+          console.log('existingItemIndex',existingItemIndex)
           // If the item exists, isUpdated it; otherwise, create a new document for it
           if (existingItemIndex !== -1) {
             // Update existing item
@@ -79,12 +80,12 @@ console.log('childmenu',childMenu)
           } else {
             // Create a new document for the item
             const newItemDoc = new MenuItem.Item(item);
+            console.log("newItemDoc",newItemDoc)
             await newItemDoc.save({ suppressWarning: true });
             childMenu.items.push(newItemDoc);
-            // parentMenu.items.push(newItemDoc);
           }
         }
-        await MenuItem.MenuItem.findByIdAndUpdate(parentMenu._id, parentMenu, {
+        await MenuItem.MenuItem.findByIdAndUpdate(parentMenuData._id, parentMenuData, {
           new: true,
         });
       
@@ -95,12 +96,10 @@ console.log('childmenu',childMenu)
         const existingItemIndex = parentMenu.items.findIndex(
           (existingItem) => existingItem._id.toString() === item._id
         );
-console.log("existingItemIndex",existingItemIndex)
         if (existingItemIndex !== -1) {
           parentMenu.items[existingItemIndex].label = item.label;
         } else {
           const newItemDoc = new MenuItem.Item(item);
-          console.log('newItemDoc',newItemDoc)
           await newItemDoc.save({ suppressWarning: true });
           parentMenu.items.push(newItemDoc);
         }
@@ -115,6 +114,7 @@ console.log("parentMenu",parentMenu)
 };
 
 async function insertMenuItems(menuItems) {
+  console.log("menuItems",menuItems)
   try {
     return await MenuItem.MenuItem.insertMany(menuItems);
   } catch (error) {
