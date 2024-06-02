@@ -7,6 +7,9 @@ const serialGenerate =require('./app/module/serialnogenerate/serialnogenerate.ro
 const userCreateRoute=require('./app/module/user/user.route')
 const companyRoute = require('./app/module/reportdetails/reportdetails.route');
 const itemsizeRoute=require('./app/module/itemsize/itemsize.route')
+const itemunitRoute=require('./app/module/itemunitinfo/itemunit.route')
+const iteminfoRoute=require('./app/module/iteminformation/iteminfo.route')
+
 require("dotenv").config();
 const cors = require("cors");
 
@@ -35,6 +38,7 @@ mongoose
   // connect(process.env.MONGO_URI)
   // MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 // application route
+
 app.use('/userrole',userRoleRoutes)
 app.use('/userrole',userRoleRoutes)
 app.use('/getuserrole',userRoleRoutes)
@@ -63,8 +67,8 @@ app.use('/reportdata', companyRoute);
 app.use('/reportdata/getdata', companyRoute);
 
 app.use('/itemzise',itemsizeRoute)
-
-
+app.use('/itemunit',itemunitRoute)
+app.use('/iteminfo',iteminfoRoute)
 
 // function errorHandler(err, req, res, next) {
 //   if (res.headersSent) {
