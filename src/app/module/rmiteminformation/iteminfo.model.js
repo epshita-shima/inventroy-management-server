@@ -1,13 +1,13 @@
 const mongoose =require('mongoose')
 
-const iteminfoSchema=new mongoose.Schema({
+const rmIteminfoSchema=new mongoose.Schema({
     itemName: {type: String,required:true},
-    sizeId: {type: String,required:true},
     unitId: {type: String,required:true},
     openingStock: {type: String,required:true},
     openingDate: {type: String,required:true},
-    itemStatus: {type: String,required:true},
-    ladgerApproveStatus: {type: String},
+    description:{type: String,required:true},
+    itemStatus: {type: Boolean,required:true},
+    ladgerApproveStatus: {type: Boolean},
     ladgerApproveDate: {type: String},
     makeBy: {type: String,required:true},
     updateBy: {type: String},
@@ -15,5 +15,5 @@ const iteminfoSchema=new mongoose.Schema({
     updateDate: {type: String},
 })
 
-const ItemInfoModel=mongoose.model('iteminformation',iteminfoSchema)
-module.exports=ItemInfoModel
+const RMItemInfoModel=mongoose.model('rmiteminformation',rmIteminfoSchema)
+module.exports=RMItemInfoModel

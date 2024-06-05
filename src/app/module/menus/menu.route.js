@@ -11,4 +11,5 @@ router.put('/updatesingle-menu',menuItemController.updatedSingleMenuItems)
 router.put('/singlemenu/singleupdate/:id',menuItemController.updateSinglePortionMenuUpdate)
 router.post('/updatenesteditems/menu',menuItemController.updateMenuNestedItemsController)
 router.delete('/deletemenu/:id',menuItemController.deleteMenuController)
+
 module.exports=router

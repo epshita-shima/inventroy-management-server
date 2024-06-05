@@ -8,7 +8,10 @@ const userCreateRoute=require('./app/module/user/user.route')
 const companyRoute = require('./app/module/reportdetails/reportdetails.route');
 const itemsizeRoute=require('./app/module/itemsize/itemsize.route')
 const itemunitRoute=require('./app/module/itemunitinfo/itemunit.route')
-const iteminfoRoute=require('./app/module/iteminformation/iteminfo.route')
+const fgIteminfoRoute=require('./app/module/fgiteminformation/iteminfo.route')
+const rmIteminfoRoute=require('./app/module/rmiteminformation/iteminfo.route')
+const categoryInfoRoute=require('./app/module/categoryinformation/categoryinfo.route')
+
 
 require("dotenv").config();
 const cors = require("cors");
@@ -68,7 +71,9 @@ app.use('/reportdata/getdata', companyRoute);
 
 app.use('/itemzise',itemsizeRoute)
 app.use('/itemunit',itemunitRoute)
-app.use('/iteminfo',iteminfoRoute)
+app.use('/iteminfo',fgIteminfoRoute)
+app.use('/rmiteminfo',rmIteminfoRoute)
+app.use('/categoryinfo',categoryInfoRoute)
 
 // function errorHandler(err, req, res, next) {
 //   if (res.headersSent) {

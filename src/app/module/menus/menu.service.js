@@ -123,22 +123,34 @@ async function insertMenuItems(menuItems) {
 }
 
 const getMenuByIdDB = async (id) => {
-
+console.log(id)
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
+    console.log('parentMenu',parentMenu)
     if (parentMenu == null) {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
         "items._id": id,
       });
+console.log('parentNestedMenu',parentNestedMenu)
       if (parentNestedMenu == null) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items._id":new ObjectId(id)
+          "items.items._id":id
         });
-       
+       console.log('childNestedMenu',childNestedMenu)
         if (!childNestedMenu) {
-          throw new Error("Menu not found");
+          const childNestedChildMenu = await MenuItem.MenuItem.findOne({
+            "items.items.items._id":new ObjectId(id)
+          });
+          console.log('childNestedChildMenu',childNestedChildMenu)
+          if(!childNestedChildMenu){
+            throw new Error("Menu not found");
+          }
+         
+          return childNestedChildMenu
         }
-        return childNestedMenu;
+        else{
+        return childNestedMenu
+        }
       } else {
         return parentNestedMenu;
       }
@@ -152,6 +164,7 @@ const getMenuByIdDB = async (id) => {
 };
 
 const getMenuChangingParentByIdDB = async (id) => {
+  console.log("id",id)
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
     if (parentMenu == null) {
@@ -294,14 +307,14 @@ const updateMenuNestedItemsDB = async (data) => {
   try {
     // Remove the item from the previous array
     let parentMenu;
-    parentMenu = await MenuItem.MenuItem.findOne({ _id: data.singleMenuData._id });
+    parentMenu = await MenuItem.MenuItem.findOne({ _id: data.masterMenuData._id });
     if (!parentMenu) {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
-        "items._id": data.singleMenuData._id,
+        "items._id": data.masterMenuData._id,
       });
       if (!parentNestedMenu) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items_id":new ObjectId(data.singleMenuData._id),
+          "items.items_id":new ObjectId(data.masterMenuData._id),
         });
         if (!childNestedMenu) {
           throw new Error("Error inserting menu item: " + error.message);
@@ -309,14 +322,14 @@ const updateMenuNestedItemsDB = async (data) => {
           const data1 = await MenuItem.MenuItem.findOneAndUpdate(
             { _id: data.singleMenu._id },
             // Find the document containing the item to remove
-            { $pull: { items: { _id: data.singleMenuData._id } } }, // Pull the item from the array
+            { $pull: { items: { _id: data.masterMenuData._id } } }, // Pull the item from the array
             // // Pass the session to the operation
             // { returnOriginal: false }
             { new: true }
           );
           const data2 = await MenuItem.MenuItem.findOneAndUpdate(
-            { _id: data.singleMenuData._id }, // Find the document by its _id
-            { $set: data.singleMenuData }, // Update the document with the new data
+            { _id: data.masterMenuData._id }, // Find the document by its _id
+            { $set: data.masterMenuData }, // Update the document with the new data
             // Pass the session to the operation
             { returnOriginal: false }
           );
@@ -326,14 +339,14 @@ const updateMenuNestedItemsDB = async (data) => {
         const data1 = await MenuItem.MenuItem.findOneAndUpdate(
           { _id: data.singleMenu._id },
           // Find the document containing the item to remove
-          { $pull: { items: { _id: data.singleMenuData.items.filter((item)=>item._id) } } }, // Pull the item from the array
+          { $pull: { items: { _id: data.masterMenuData.items.filter((item)=>item._id) } } }, // Pull the item from the array
           // // Pass the session to the operation
           // { returnOriginal: false }
           { new: true }
         );
         const data2 = await MenuItem.MenuItem.findOneAndUpdate(
-          { _id: data.singleMenuData._id }, // Find the document by its _id
-          { $set: data.singleMenuData.items }, // Update the document with the new data
+          { _id: data.masterMenuData._id }, // Find the document by its _id
+          { $set: data.masterMenuData.items }, // Update the document with the new data
           // Pass the session to the operation
           { returnOriginal: false }
         );
@@ -343,7 +356,7 @@ const updateMenuNestedItemsDB = async (data) => {
       const data1 = await MenuItem.MenuItem.findOneAndUpdate(
         { _id: data.singleMenu._id },
         // Find the document containing the item to remove
-        { $pull: { items: { _id: data.singleMenuData.items.filter((item)=>item._id) } } }, // Pull the item from the array
+        { $pull: { items: { _id: data.masterMenuData.items.filter((item)=>item._id) } } }, // Pull the item from the array
         // // Pass the session to the operation
         // { returnOriginal: false }
         { new: true }
@@ -351,8 +364,8 @@ const updateMenuNestedItemsDB = async (data) => {
       
      
       const data2 = await MenuItem.MenuItem.findOneAndUpdate(
-        { _id: data.singleMenuData._id }, // Find the document by its _id
-        { $push: { items:  data.singleMenuData.items  } }, // Update the document with the new data
+        { _id: data.masterMenuData._id }, // Find the document by its _id
+        { $push: { items:  data.masterMenuData.items  } }, // Update the document with the new data
         // Pass the session to the operation
         { returnOriginal: false }
       );
