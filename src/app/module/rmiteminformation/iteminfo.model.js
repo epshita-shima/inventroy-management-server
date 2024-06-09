@@ -2,6 +2,7 @@ const mongoose =require('mongoose')
 
 const rmIteminfoSchema=new mongoose.Schema({
     itemName: {type: String,required:true},
+    categoryId:{type: String,required:true},
     unitId: {type: String,required:true},
     openingStock: {type: String,required:true},
     openingDate: {type: String,required:true},

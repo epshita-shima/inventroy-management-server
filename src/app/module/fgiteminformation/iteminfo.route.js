@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const ItemInfoController = require("./iteminfo.controller");
+const FinishGoodItemInfoController = require("./iteminfo.controller");
 
-router.get('/',ItemInfoController.getItemInfoController);
-router.post('/',ItemInfoController.insertItemInfoController);
-router.get('/:id',ItemInfoController.getItemInfoByIdController);
-router.put('/:id',ItemInfoController.updateItemInformationController);
-router.delete('/:id',ItemInfoController.deleteItemInformationController);
+router.get('/',FinishGoodItemInfoController.getItemInfoController);
+router.post('/',FinishGoodItemInfoController.insertItemInfoController);
+router.get('/:id',FinishGoodItemInfoController.getItemInfoByIdController);
+router.put('/:id',FinishGoodItemInfoController.updateItemInformationController);
+router.put('/',FinishGoodItemInfoController.updateItemInformationStatusController)
+router.delete('/:id',FinishGoodItemInfoController.deleteItemInformationController);
 
 module.exports=router

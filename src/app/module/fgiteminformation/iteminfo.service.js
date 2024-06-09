@@ -1,8 +1,8 @@
-const ItemInfoModel = require("./iteminfo.model");
+const FinishGoodItemInfoModel = require("./iteminfo.model");
 
 async function getItemInfoDB() {
   try {
-    const itemInfoData = await ItemInfoModel.find();
+    const itemInfoData = await FinishGoodItemInfoModel.find();
     return itemInfoData;
   } catch (error) {
     console.error("Error fetching items unit:", error);
@@ -11,7 +11,7 @@ async function getItemInfoDB() {
 
 async function insertItemInfotDB(itemunit) {
   try {
-    return await ItemInfoModel.insertMany(itemunit);
+    return await FinishGoodItemInfoModel.insertMany(itemunit);
   } catch (error) {
     throw new Error("Error inserting items: " + error.message);
   }
@@ -19,7 +19,7 @@ async function insertItemInfotDB(itemunit) {
 
 async function getItemInfoByIdDB(id) {
   try {
-    const singleItem = await ItemInfoModel.findById(id);
+    const singleItem = await FinishGoodItemInfoModel.findById(id);
     console.log(singleItem);
     return singleItem;
   } catch (error) {
@@ -30,7 +30,7 @@ async function getItemInfoByIdDB(id) {
 
 async function updateItemInformationDB(id, data) {
   try {
-    const updatedItemInfo = await ItemInfoModel.findByIdAndUpdate(
+    const updatedItemInfo = await FinishGoodItemInfoModel.findByIdAndUpdate(
       id,
       { $set: data },
       { new: true }
@@ -47,9 +47,31 @@ async function updateItemInformationDB(id, data) {
   }
 }
 
+async function updateItemInformationStatusDB( data) {
+  console.log('data',data)
+  try {
+    const promises = data?.map(async (updateStatus) => {
+      // Update isactive field for each user
+      const updatedStatusData = await FinishGoodItemInfoModel.findByIdAndUpdate(
+        updateStatus._id,
+        { itemStatus: updateStatus.itemStatus },
+        { new: true }
+      );
+      return updatedStatusData;
+    });
+    const updatedStatusData = await Promise.all(promises);
+    return updatedStatusData;
+  } catch (error) {
+    console.error("Error updating multiple users:", error);
+    throw new Error("Failed to update multiple data");
+  }
+}
+
+
+
 const deleteItemInformationDB = async (id) => {
   try {
-    const deleteItemInfoData= await ItemInfoModel.findByIdAndDelete(id);
+    const deleteItemInfoData= await FinishGoodItemInfoModel.findByIdAndDelete(id);
     console.log(deleteItemInfoData, "delete");
     if (!deleteItemInfoData) {
       throw new Error("Item not found");
@@ -64,5 +86,6 @@ module.exports = {
   insertItemInfotDB,
   getItemInfoByIdDB,
   updateItemInformationDB,
+  updateItemInformationStatusDB,
   deleteItemInformationDB
 };

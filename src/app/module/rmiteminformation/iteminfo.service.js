@@ -48,6 +48,27 @@ async function updateItemInformationDB(id, data) {
   }
 }
 
+async function updateItemInformationStatusDB( data) {
+  console.log('data',data)
+  try {
+    const promises = data?.map(async (updateStatus) => {
+      // Update isactive field for each user
+      const updatedStatusData = await RMItemInfoModel.findByIdAndUpdate(
+        updateStatus._id,
+        { itemStatus: updateStatus.itemStatus },
+        { new: true }
+      );
+      return updatedStatusData;
+    });
+    const updatedStatusData = await Promise.all(promises);
+    return updatedStatusData;
+  } catch (error) {
+    console.error("Error updating multiple users:", error);
+    throw new Error("Failed to update multiple data");
+  }
+}
+
+
 const deleteItemInformationDB = async (id) => {
   try {
     const deleteItemInfoData= await RMItemInfoModel.findByIdAndDelete(id);
@@ -65,5 +86,6 @@ module.exports = {
   insertItemInfotDB,
   getItemInfoByIdDB,
   updateItemInformationDB,
-  deleteItemInformationDB
+  deleteItemInformationDB,
+  updateItemInformationStatusDB
 };

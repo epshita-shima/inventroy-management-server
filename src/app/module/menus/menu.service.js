@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 const getMenuItemDB = async () => {
   try {
     const menuitem = await MenuItem.MenuItem.find();
-    console.log('menuitem',menuitem);
+
     return menuitem;
   } catch (error) {
     console.error("Error fetching menu:", error);
@@ -15,17 +15,17 @@ const updateMenuDB = async (newItem) => {
   try {
     let parentMenu;
     parentMenu = await MenuItem.MenuItem.findOne({ _id: newItem._id });
-console.log(" parentMenu", parentMenu)
+
     if (!parentMenu) {
     const  parentMenuData = await MenuItem.MenuItem.findOne({
         "items._id": newItem._id,
       });
-      console.log('parentMenuData',parentMenuData)
+   
       if (parentMenuData == null) {
         const parentNestedMenu = await MenuItem.MenuItem.findOne({
           "items.items._id": new ObjectId(newItem._id),
         });
-        console.log('parentNestedMenu',parentNestedMenu)
+       
         if (parentNestedMenu == null) {
         } else {
           const childMenu = parentNestedMenu.items.find(
@@ -80,7 +80,7 @@ console.log(" parentMenu", parentMenu)
           } else {
             // Create a new document for the item
             const newItemDoc = new MenuItem.Item(item);
-            console.log("newItemDoc",newItemDoc)
+     
             await newItemDoc.save({ suppressWarning: true });
             childMenu.items.push(newItemDoc);
           }
@@ -104,7 +104,7 @@ console.log(" parentMenu", parentMenu)
           parentMenu.items.push(newItemDoc);
         }
       }
-console.log("parentMenu",parentMenu)
+
       await parentMenu.save({ suppressWarning: true });
       return parentMenu;
     }
@@ -114,7 +114,7 @@ console.log("parentMenu",parentMenu)
 };
 
 async function insertMenuItems(menuItems) {
-  console.log("menuItems",menuItems)
+
   try {
     return await MenuItem.MenuItem.insertMany(menuItems);
   } catch (error) {
@@ -123,25 +123,25 @@ async function insertMenuItems(menuItems) {
 }
 
 const getMenuByIdDB = async (id) => {
-console.log(id)
+
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
-    console.log('parentMenu',parentMenu)
+
     if (parentMenu == null) {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
         "items._id": id,
       });
-console.log('parentNestedMenu',parentNestedMenu)
+
       if (parentNestedMenu == null) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
           "items.items._id":id
         });
-       console.log('childNestedMenu',childNestedMenu)
+
         if (!childNestedMenu) {
           const childNestedChildMenu = await MenuItem.MenuItem.findOne({
             "items.items.items._id":new ObjectId(id)
           });
-          console.log('childNestedChildMenu',childNestedChildMenu)
+        
           if(!childNestedChildMenu){
             throw new Error("Menu not found");
           }
@@ -164,7 +164,7 @@ console.log('parentNestedMenu',parentNestedMenu)
 };
 
 const getMenuChangingParentByIdDB = async (id) => {
-  console.log("id",id)
+
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
     if (parentMenu == null) {
@@ -377,15 +377,14 @@ const updateMenuNestedItemsDB = async (data) => {
   }
 };
 const deleteMenuDB = async (id) => {
-  console.log(id)
   try {
     const deletedParentMenu = await MenuItem.MenuItem.findByIdAndDelete(id);
     if(deletedParentMenu==null){
       const deletedNestedParentMenu = await MenuItem.MenuItem.updateOne({ 'items._id': id }, { $pull: { items: { _id: id } } });
-      console.log("deletedNestedParentMenu",deletedNestedParentMenu)
+
       if(!deletedNestedParentMenu){
         const deletedNestedChildMenu = await MenuItem.MenuItem.updateOne({ 'items.items._id': new ObjectId(id) }, { $pull: { 'items.items': { _id: id } } });
-        console.log("deletedNestedChildMenu",deletedNestedChildMenu)
+
         if(!deletedNestedChildMenu){
           throw new Error("User not found");
         }

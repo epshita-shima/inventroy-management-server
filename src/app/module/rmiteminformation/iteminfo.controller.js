@@ -49,6 +49,17 @@ const updateItemInformationController = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const updateItemInformationStatusController = async (req, res) => {
+  try {
+      const result = await RMIteminfoService.updateItemInformationStatusDB(req.body);
+      return res.status(200).json(result);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const deleteItemInformationController = async (req, res) => {
   const { id } = req.params;
   try {
@@ -64,5 +75,6 @@ module.exports = {
   insertItemInfoController,
   getItemInfoByIdController,
   updateItemInformationController,
-  deleteItemInformationController
+  deleteItemInformationController,
+  updateItemInformationStatusController
 };

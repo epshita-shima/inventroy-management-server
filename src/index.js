@@ -11,11 +11,10 @@ const itemunitRoute=require('./app/module/itemunitinfo/itemunit.route')
 const fgIteminfoRoute=require('./app/module/fgiteminformation/iteminfo.route')
 const rmIteminfoRoute=require('./app/module/rmiteminformation/iteminfo.route')
 const categoryInfoRoute=require('./app/module/categoryinformation/categoryinfo.route')
-
+const cftInfoRoute=require('./app/module/cftinformation/cft.route')
 
 require("dotenv").config();
 const cors = require("cors");
-
 
 const app = express();
 app.use(cors());
@@ -74,6 +73,7 @@ app.use('/itemunit',itemunitRoute)
 app.use('/iteminfo',fgIteminfoRoute)
 app.use('/rmiteminfo',rmIteminfoRoute)
 app.use('/categoryinfo',categoryInfoRoute)
+app.use('/cftinfo',cftInfoRoute)
 
 // function errorHandler(err, req, res, next) {
 //   if (res.headersSent) {

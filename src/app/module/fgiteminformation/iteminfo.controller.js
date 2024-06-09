@@ -1,15 +1,15 @@
-const IteminfoService = require("./iteminfo.service");
+const FinishGoodIteminfoService = require("./iteminfo.service");
 
 const getItemInfoController = async (req, res, next) => {
   const data = req.body;
-  const itemInfoData = await IteminfoService.getItemInfoDB(data);
+  const itemInfoData = await FinishGoodIteminfoService.getItemInfoDB(data);
   res.json(itemInfoData);
 };
 
 const insertItemInfoController = async (req, res, next) => {
   try {
     const data = req.body;
-    const itemInfo = await IteminfoService.insertItemInfotDB(data);
+    const itemInfo = await FinishGoodIteminfoService.insertItemInfotDB(data);
     res.status(200).json({
       status: "success",
       data: itemInfo,
@@ -22,7 +22,7 @@ const insertItemInfoController = async (req, res, next) => {
 const getItemInfoByIdController = async (req, res) => {
   const { id } = req.params;
   try {
-    const singleItemInfo = await IteminfoService.getItemInfoByIdDB(id);
+    const singleItemInfo = await FinishGoodIteminfoService.getItemInfoByIdDB(id);
     if (!singleItemInfo) {
       return res.status(404).json({ message: "Menu not found" });
     }
@@ -39,7 +39,7 @@ const updateItemInformationController = async (req, res) => {
     console.log(id);
     const updatedItemData = req.body; // Assuming the updated data is sent in the request body
     console.log("updatedItemData", updatedItemData);
-    const result = await IteminfoService.updateItemInformationDB(
+    const result = await FinishGoodIteminfoService.updateItemInformationDB(
       id,
       updatedItemData
     );
@@ -48,10 +48,21 @@ const updateItemInformationController = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const updateItemInformationStatusController = async (req, res) => {
+  try {
+      const result = await FinishGoodIteminfoService.updateItemInformationStatusDB(req.body);
+      return res.status(200).json(result);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 const deleteItemInformationController = async (req, res) => {
   const { id } = req.params;
   try {
-      const itemInfo = await IteminfoService.deleteItemInformationDB(id);
+      const itemInfo = await FinishGoodIteminfoService.deleteItemInformationDB(id);
       return res.status(200).json(itemInfo);
   } catch (error) {
       console.error(error);
@@ -63,5 +74,6 @@ module.exports = {
   insertItemInfoController,
   getItemInfoByIdController,
   updateItemInformationController,
+  updateItemInformationStatusController,
   deleteItemInformationController
 };

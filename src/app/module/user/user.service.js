@@ -76,7 +76,6 @@ const updateUserPasswordDB = async (id, password) => {
 };
 
 const updateUserMultipleStatusDB = async (dataToUpdate) => {
- 
   try {
     const promises = dataToUpdate?.map(async (user) => {
       // Update isactive field for each user
