@@ -12,6 +12,8 @@ const fgIteminfoRoute=require('./app/module/fgiteminformation/iteminfo.route')
 const rmIteminfoRoute=require('./app/module/rmiteminformation/iteminfo.route')
 const categoryInfoRoute=require('./app/module/categoryinformation/categoryinfo.route')
 const cftInfoRoute=require('./app/module/cftinformation/cft.route')
+const supplierInfoRoute=require('./app/module/supplierinformation/supplier.route')
+
 
 require("dotenv").config();
 const cors = require("cors");
@@ -41,39 +43,40 @@ mongoose
   // MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 // application route
 
-app.use('/userrole',userRoleRoutes)
-app.use('/userrole',userRoleRoutes)
-app.use('/getuserrole',userRoleRoutes)
+app.use('/userrole',userRoleRoutes);
+app.use('/userrole',userRoleRoutes);
+app.use('/getuserrole',userRoleRoutes);
 
-app.use('/menuitems',menuItemRoutes)
-app.use('/menuitems/update',menuItemRoutes)
-app.use('/menuitems/create',menuItemRoutes)
-app.use('/menuitems',menuItemRoutes)
-app.use('/menuitems/updatesingle-menu',menuItemRoutes)
-app.use('/menuitems/singlemenu',menuItemRoutes)
-app.use('/menuitems/singlemenu/changingparent',menuItemRoutes)
-app.use('/menuitems/deletemenu',menuItemRoutes)
-app.use('/menuitems/updatenesteditems',menuItemRoutes)
+app.use('/menuitems',menuItemRoutes);
+app.use('/menuitems/update',menuItemRoutes);
+app.use('/menuitems/create',menuItemRoutes);
+app.use('/menuitems',menuItemRoutes);
+app.use('/menuitems/updatesingle-menu',menuItemRoutes);
+app.use('/menuitems/singlemenu',menuItemRoutes);
+app.use('/menuitems/singlemenu/changingparent',menuItemRoutes);
+app.use('/menuitems/deletemenu',menuItemRoutes);
+app.use('/menuitems/updatenesteditems',menuItemRoutes);
 
-app.use('/serial-create',serialGenerate)
-app.use('/serial-getdata',serialGenerate)
-app.use('/user-create',userCreateRoute)
-app.use('/get-user',userCreateRoute)
-app.use('/user',userCreateRoute)
-app.use('/user/update',userCreateRoute)
-app.use('/user/change',userCreateRoute)
-app.use('/user/delete',userCreateRoute)
-app.use('/user/status',userCreateRoute)
-app.use('/user/updatestatus',userCreateRoute)
+app.use('/serial-create',serialGenerate);
+app.use('/serial-getdata',serialGenerate);
+app.use('/user-create',userCreateRoute);
+app.use('/get-user',userCreateRoute);
+app.use('/user',userCreateRoute);
+app.use('/user/update',userCreateRoute);
+app.use('/user/change',userCreateRoute);
+app.use('/user/delete',userCreateRoute);
+app.use('/user/status',userCreateRoute);
+app.use('/user/updatestatus',userCreateRoute);
 app.use('/reportdata', companyRoute);
 app.use('/reportdata/getdata', companyRoute);
 
-app.use('/itemzise',itemsizeRoute)
-app.use('/itemunit',itemunitRoute)
-app.use('/iteminfo',fgIteminfoRoute)
-app.use('/rmiteminfo',rmIteminfoRoute)
-app.use('/categoryinfo',categoryInfoRoute)
-app.use('/cftinfo',cftInfoRoute)
+app.use('/itemzise',itemsizeRoute);
+app.use('/itemunit',itemunitRoute);
+app.use('/iteminfo',fgIteminfoRoute);
+app.use('/rmiteminfo',rmIteminfoRoute);
+app.use('/categoryinfo',categoryInfoRoute);
+app.use('/cftinfo',cftInfoRoute);
+app.use('/supplierinfo',supplierInfoRoute);
 
 // function errorHandler(err, req, res, next) {
 //   if (res.headersSent) {
