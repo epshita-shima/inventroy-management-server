@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const multer = require('multer');
+
 // const { MongoClient } = require("mongoose");
 const userRoleRoutes = require("./app/module/userrole/userrole.route");
 const menuItemRoutes=require("./app/module/menus/menu.route");
@@ -13,7 +15,8 @@ const rmIteminfoRoute=require('./app/module/rmiteminformation/iteminfo.route')
 const categoryInfoRoute=require('./app/module/categoryinformation/categoryinfo.route')
 const cftInfoRoute=require('./app/module/cftinformation/cft.route')
 const supplierInfoRoute=require('./app/module/supplierinformation/supplier.route')
-
+const clientInfoRoute=require('./app/module/clientinformation/client.route')
+const upload=require('./app/module/multer/configuration')
 
 require("dotenv").config();
 const cors = require("cors");
@@ -21,9 +24,15 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+
 const port = 5000;
 
+app.use(upload.single('image'));
+
 const uri = process.env.MONGO_URI;
+
 
 if (!uri) {
   console.error('Error: MongoDB URI is not defined in the environment variables');
@@ -77,6 +86,8 @@ app.use('/rmiteminfo',rmIteminfoRoute);
 app.use('/categoryinfo',categoryInfoRoute);
 app.use('/cftinfo',cftInfoRoute);
 app.use('/supplierinfo',supplierInfoRoute);
+app.use('/clientinfo',clientInfoRoute)
+
 
 // function errorHandler(err, req, res, next) {
 //   if (res.headersSent) {
@@ -88,6 +99,7 @@ app.use('/supplierinfo',supplierInfoRoute);
 app.get('/', (req, res) => {
   res.send('Running inventory management');
 });
+
 
 app.listen(port, () => {
   console.log(`app litstening at port ${port}`);

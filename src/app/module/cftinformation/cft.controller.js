@@ -8,8 +8,24 @@ const getCFTInfoController = async (req, res, next) => {
 
 const insertCFTInfoController = async (req, res, next) => {
   try {
-    const data = req.body;
-    const CFTInfo = await CFTInfosService.insertCFTInfosDB(data);
+     const newImage = new cftinformation();
+    const newdata=req.body[0]
+    console.log(req.body[0])
+    newImage.openingDate = newdata.openingDate;
+    newImage.kgPerUnit = newdata.kgPerUnit;
+    newImage.isActive = newdata.isActive;
+    newImage.closingDate = newdata.closingDate;
+    newImage.makeBy = newdata.makeBy;
+    newImage.makeDate = newdata.makeDate;
+    newImage.updateBy = newdata.updateBy;
+    newImage.updateDate = newdata.updateDate;
+    
+    console.log('newImage',newImage)
+    console.log(req.file)
+    if(req.file){
+      newImage.image=req.body[0].image
+    }
+    const CFTInfo = await CFTInfosService.insertCFTInfosDB(newImage);
     res.status(200).json({
       status: "success",
       data: CFTInfo,

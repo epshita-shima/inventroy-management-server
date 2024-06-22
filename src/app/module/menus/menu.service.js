@@ -248,12 +248,12 @@ const updateSingleMenuDataDB = async (id, data) => {
     parentMenu = await MenuItem.MenuItem.findOne({ _id: id });
     if (!parentMenu) {
       const parentNestedMenu = await MenuItem.MenuItem.findOne({
-        "items._id": id,
+        "items._id": new ObjectId(id),
       });
 
       if (!parentNestedMenu) {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
-          "items.items._id": id,
+          "items.items._id": new ObjectId(id) ,
         });
 
         if (!childNestedMenu) {
@@ -268,7 +268,7 @@ const updateSingleMenuDataDB = async (id, data) => {
             return updatedItem;
           } else {
             console.log("No matching document found for ID:", id);
-            return null;
+            return new Error("Error inserting menu item: " + error.message);;
           }
         }
       } else {

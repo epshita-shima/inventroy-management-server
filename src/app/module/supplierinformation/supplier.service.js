@@ -48,5 +48,38 @@ async function getAupplierInfoByIdDB(id) {
       throw new Error("Internal server error from service");
     }
   }
+
+  async function updateSupplierInformationStatusDB( data) {
+    console.log('data',data)
+    try {
+      const promises = data?.map(async (updateStatus) => {
+        // Update isactive field for each user
+        const updatedStatusData = await SupplierInfoModel.findByIdAndUpdate(
+          updateStatus._id,
+          { isActive: updateStatus.isActive },
+          { new: true }
+        );
+        return updatedStatusData;
+      });
+      const updatedStatusData = await Promise.all(promises);
+      return updatedStatusData;
+    } catch (error) {
+      console.error("Error updating multiple users:", error);
+      throw new Error("Failed to update multiple data");
+    }
+  }
+
+  const deleteSupplierInformationDB = async (id) => {
+    try {
+      const deleteSupplierInfoData= await SupplierInfoModel.findByIdAndDelete(id);
+      console.log(deleteSupplierInfoData, "delete");
+      if (!deleteSupplierInfoData) {
+        throw new Error("Supplier not found");
+      }
+      return deleteSupplierInfoData;
+    } catch (error) {
+      throw new Error("Internal server error");
+    }
+  };
   
-module.exports = {getSupplierInfoDB,insertSupplierInfoDB,getAupplierInfoByIdDB,updateSupplierInformationDB}
+module.exports = {getSupplierInfoDB,insertSupplierInfoDB,getAupplierInfoByIdDB,updateSupplierInformationDB,updateSupplierInformationStatusDB,deleteSupplierInformationDB}

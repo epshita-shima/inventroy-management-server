@@ -52,5 +52,26 @@ const insertSupplierInfoController = async (req, res, next) => {
     }
   };
 
-  module.exports = {getSupplierInfoController,insertSupplierInfoController,getSupplierInfoByIdController,updateSupplierInformationController}
+  const updateSupplierInformationStatusController = async (req, res) => {
+    try {
+        const result = await SupplierInfoService.updateSupplierInformationStatusDB(req.body);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+  const deleteSupplierInformationController = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const supplierInfo = await SupplierInfoService.deleteSupplierInformationDB(id);
+        return res.status(200).json(supplierInfo);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+
+  module.exports = {getSupplierInfoController,insertSupplierInfoController,getSupplierInfoByIdController,updateSupplierInformationController,updateSupplierInformationStatusController,deleteSupplierInformationController}
   
