@@ -9,7 +9,6 @@ async function getCFTInfosDB(){
       }
 }
 async function insertCFTInfosDB(cftData) {
-  console.log(cftData)
     try {
       return await CFTInfosModal.insertMany(cftData);
     } catch (error) {

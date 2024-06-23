@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const multer = require('multer');
 
@@ -24,12 +25,11 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
-
+app.use('/uploads',express.static('uploads'))
 const port = 5000;
 
-app.use(upload.single('image'));
+// app.use(upload.single('image'));
 
 const uri = process.env.MONGO_URI;
 

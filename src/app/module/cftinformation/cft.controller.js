@@ -1,30 +1,34 @@
 const CFTInfosService = require("./cft.service");
+const CFTInfoModel=require('./cft.model')
+var fs = require("fs");
 
 const getCFTInfoController = async (req, res, next) => {
   const data = req.body;
+  console.log(data)
   const CFTInfoData = await CFTInfosService.getCFTInfosDB(data);
   res.json(CFTInfoData);
 };
 
 const insertCFTInfoController = async (req, res, next) => {
   try {
-     const newImage = new cftinformation();
-    const newdata=req.body[0]
-    console.log(req.body[0])
-    newImage.openingDate = newdata.openingDate;
-    newImage.kgPerUnit = newdata.kgPerUnit;
-    newImage.isActive = newdata.isActive;
-    newImage.closingDate = newdata.closingDate;
-    newImage.makeBy = newdata.makeBy;
-    newImage.makeDate = newdata.makeDate;
-    newImage.updateBy = newdata.updateBy;
-    newImage.updateDate = newdata.updateDate;
-    
-    console.log('newImage',newImage)
-    console.log(req.file)
-    if(req.file){
-      newImage.image=req.body[0].image
-    }
+     const newImage = new CFTInfoModel();
+     newImage.openingDate = req.body.openingDate;
+     newImage.kgPerUnit = req.body.kgPerUnit;
+     newImage.isActive = req.body.isActive
+     newImage.closingDate = req.body.closingDate 
+     newImage.makeBy = req.body.makeBy;
+     newImage.makeDate = req.body.makeDate;
+     newImage.updateBy = req.body.updateBy;
+     newImage.updateDate = req.body.updateDate;
+ 
+     if (req.file) {
+         // Assuming you store the file path or buffer
+         newImage.image = req.file.path; // or req.file.buffer if storing in-memory
+     }
+     else{
+      newImage.image=''
+     }
+ 
     const CFTInfo = await CFTInfosService.insertCFTInfosDB(newImage);
     res.status(200).json({
       status: "success",
@@ -33,7 +37,7 @@ const insertCFTInfoController = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       status: "error",
-      message: "Failed to save data to the database",
+      message:{error},
     });
   }
 };
@@ -55,9 +59,21 @@ const getCFTInfoByIdController = async (req, res) => {
 const updateCFTInfoController = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
-    const updateCFTInfoData = req.body; // Assuming the updated data is sent in the request body
-    console.log("updateCFTInfoData", updateCFTInfoData);
+    const updateCFTInfoData = {
+      openingDate: req.body.openingDate,
+      kgPerUnit: req.body.kgPerUnit,
+      isActive: req.body.isActive ,
+      closingDate: req.body.closingDate,
+      makeBy: req.body.makeBy,
+      makeDate: req.body.makeDate,
+      updateBy: req.body.updateBy,
+      updateDate: req.body.updateDate,
+  };
+
+  if (req.file) {
+      updateCFTInfoData.image = req.file.path; // Update image if a new file is uploaded
+  }
+
     const result = await CFTInfosService.updateCFTInfosDB(
       id,
       updateCFTInfoData
