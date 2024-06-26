@@ -95,7 +95,6 @@ const updateUserMultipleStatusDB = async (dataToUpdate) => {
 };
 
 const updateUserMultipleDataDB = async (dataToUpdate) => {
-  console.log(dataToUpdate,dataToUpdate._id)
   try {
     // Destructure the dataToUpdate object to extract individual fields
     const {

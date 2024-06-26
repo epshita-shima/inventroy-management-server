@@ -80,8 +80,7 @@ const updateUserMultipleStatus = async (req, res) => {
 };
 const updateUserMultipleField = async (req, res) => {
     try {
-        // Call the service function to update multiple data
-        const result = await userService.updateUserMultipleDataDB(req.body);
+        const result = await userService.updateUserMultipleDataDB(req.body[0]);
         return res.status(200).json(result);
     } catch (error) {
         console.error(error);

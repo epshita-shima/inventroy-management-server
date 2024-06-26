@@ -3,7 +3,7 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 // autoIncrement.initialize(mongoose.connection);
 
 const serialNoSchema = new mongoose.Schema({
-    serialNo:{type: Number},
+    serialNo:{type: Number, default: 0},
     type: { type: String, required: true },
     year: { type: String, required: true },
     makeby:{type:String},

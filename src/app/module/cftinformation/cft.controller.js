@@ -20,10 +20,9 @@ const insertCFTInfoController = async (req, res, next) => {
      newImage.makeDate = req.body.makeDate;
      newImage.updateBy = req.body.updateBy;
      newImage.updateDate = req.body.updateDate;
- 
+
      if (req.file) {
-         // Assuming you store the file path or buffer
-         newImage.image = req.file.path; // or req.file.buffer if storing in-memory
+         newImage.image = req.file.path;
      }
      else{
       newImage.image=''
