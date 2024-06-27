@@ -1,6 +1,6 @@
 const SerialNoGenerate = require("./serialnogenerate.model");
 
-async function getNextSerialNumber() {
+async function getNextSerialNumber(type) {
     // const lastDocument = await SerialNoGenerate.findOne().sort({ serialNo: -1 }); // Get the document with the highest serialNo
     // if (lastDocument) {
     //     return  lastDocument.serialNo + 1 ; // Increment the last serialNo

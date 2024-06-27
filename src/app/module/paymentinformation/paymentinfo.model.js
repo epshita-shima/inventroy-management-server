@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const paymentTypeSchema = new mongoose.Schema({
+  paymentMode: { type: String, required: true },
   paymentType: { type: String, required: true },
   makeBy: { type: String,required: true },
   updateBy: { type: String },

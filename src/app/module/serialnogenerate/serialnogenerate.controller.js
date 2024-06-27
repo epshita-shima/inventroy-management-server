@@ -6,9 +6,10 @@ async function insertDocument(documentData) {
     // documentData.serialNo = serialNo; // Set the serialNo in the document data
     // const document = new SerialNoGenerate(documentData);
     // return document.save();
-    const serialNo = await getNextSerialNumber(data.type);
+    console.log(documentData.type)
+    const serialNo = await getNextSerialNumber(documentData.type);
     const document = new SerialNoGenerate({
-      ...data,
+      ...documentData,
       serialNo
     });
     return document.save();

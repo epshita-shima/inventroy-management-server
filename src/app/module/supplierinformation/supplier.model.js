@@ -2,6 +2,7 @@ const mongoose =require('mongoose')
 
 const supplierInfoSchema=new mongoose.Schema({
         supplierName: {type: String,required:true},
+        supplierShortName: {type: String,required:true},
         email: {type: String,required:true},
         mobileNo: {type: String,required:true},
         contactPerson: {type: String,required:true},
