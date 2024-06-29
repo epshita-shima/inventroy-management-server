@@ -15,7 +15,7 @@ const PurchaseOrderInfoSchema = new Schema({
   currencyId: { type: String, required: true },
   paymentId: { type: String, required: true },
   bankId: { type: String, required: true },
-  deliveryDate: { type: Date, required: true },
+  deliveryDate: { type: String, required: true },
   grandTotalAmount: { type: Number, required: true },
   grandTotalQuantity: { type: Number, required: true },
   approveStatus: { type:Boolean, required: true },
@@ -26,6 +26,7 @@ const PurchaseOrderInfoSchema = new Schema({
   makeDate: { type: Date, required: true, default: Date.now },
   updateDate: { type: Date },
   detailsData: [DetailsDataSchema],
+  remarks:{ type: String, required: true }
 });
 const PurchaseOrderInfoModel = mongoose.model(
   "purchaseorderinformation",
