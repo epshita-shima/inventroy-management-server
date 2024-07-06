@@ -6,6 +6,7 @@ const bankInformationSchema = new mongoose.Schema({
   bankName: { type: String, required: true },
   branchName: { type: String, required: true },
   city: { type: String, required: true },
+  address: { type: String, required: true },
   routingNumber: { type: String, required: true },
   swiftCode: { type: String, required: true },
   makeBy: { type: String, required: true },

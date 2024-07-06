@@ -123,7 +123,7 @@ async function insertMenuItems(menuItems) {
 }
 
 const getMenuByIdDB = async (id) => {
-
+  console.log(id)
   try {
     const parentMenu = await MenuItem.MenuItem.findById(id);
 
@@ -136,16 +136,16 @@ const getMenuByIdDB = async (id) => {
         const childNestedMenu = await MenuItem.MenuItem.findOne({
           "items.items._id":id
         });
+        console.log(childNestedMenu)
 
         if (!childNestedMenu) {
           const childNestedChildMenu = await MenuItem.MenuItem.findOne({
             "items.items.items._id":new ObjectId(id)
           });
-        
+   
           if(!childNestedChildMenu){
             throw new Error("Menu not found");
           }
-         
           return childNestedChildMenu
         }
         else{

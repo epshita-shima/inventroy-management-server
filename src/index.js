@@ -20,6 +20,7 @@ const clientInfoRoute = require("./app/module/clientinformation/client.route");
 const paymentInfoRoute = require("./app/module/paymentinformation/paymentinfo.route");
 const bankInfoRoute = require("./app/module/bankinformation/bankinfo.route");
 const purchaseOrderInfoRoute = require("./app/module/purchaseorderinformation/purchaseorderinfo.route");
+const goodsReceiveNoteRoute=require('./app/module/goodsreceivenoteinformation/grninfo.route')
 const upload = require("./app/module/multer/configuration");
 
 require("dotenv").config();
@@ -93,6 +94,7 @@ app.use("/clientinfo", clientInfoRoute);
 app.use("/paymentinfo", paymentInfoRoute);
 app.use("/bankinfo", bankInfoRoute);
 app.use("/purchaseorderinfo", purchaseOrderInfoRoute);
+app.use('/grninfo',goodsReceiveNoteRoute)
 
 // function errorHandler(err, req, res, next) {
 //   if (res.headersSent) {
