@@ -6,15 +6,18 @@ const DetailsDataSchema = new Schema({
     itemId: { type: String, required: true },
     quantity: { type: Number, required: true },
     unitPrice: { type: Number, required: true },
-    totalAmount: { type: Number, required: true },
+    amount: { type: Number, required: true },
   });
   
 const goodsReceiveNoteSchema = new mongoose.Schema({
     pOSingleId:{ type: String, required: true},
+    grnSerialNo:{ type: String, required: true},
     supplierId: {type: String,required:true},
     supplierPoNo: {type: String,required:true},
-    poReceiveDate: {type: String,required:true},
+    receiveDate: {type: String,required:true},
+    challanNo:{type: String,required:true},
     grandTotalQuantity:{type: String,required:true},
+    grandTotalReceivedQuantity:{type: String,required:true},
     grandTotalAmount: {type: String,required:true},
     detailsData: [DetailsDataSchema],
     isAccountPostingStatus: {type:Boolean,required:true},

@@ -1,5 +1,5 @@
 const PurchaseOrderInfoModel = require("./purchaseorderinfo.model");
-
+const GoodsReceivedNoteModel = require("../goodsreceivenoteinformation/grninfo.model");
 async function getPurchaseOrderInfoDB() {
   try {
     const urchaseOrderData = await PurchaseOrderInfoModel.find();
@@ -29,6 +29,8 @@ async function getPurchaseOrderInfoByIdDB(id) {
   }
 }
 
+
+
 async function updatePurchaseOrderInfoDB(id, data) {
   try {
     const updatePurchaseOrderInfo =
@@ -37,6 +39,36 @@ async function updatePurchaseOrderInfoDB(id, data) {
         { $set: data },
         { new: true }
       );
+    if (!updatePurchaseOrderInfo) {
+      console.log("No matching document found for ID:", id);
+      return null;
+    }
+    for (const item of data.detailsData) {
+      if (item.unitPrice !== undefined) {
+        const grnDocs = await GoodsReceivedNoteModel.find({
+          pOSingleId: id,
+          "detailsData.itemId": item.itemId,
+        });
+        if (grnDocs) {
+          for (const grnDoc of grnDocs) {
+            for (const detail of grnDoc.detailsData) {
+              if (detail.itemId === item.itemId) {
+                detail.unitPrice = item.unitPrice;
+                detail.amount = detail.quantity * item.unitPrice;
+              }
+            }
+            grnDoc.grandTotalAmount = grnDoc.detailsData.reduce(
+              (acc, detail) => acc + detail.amount,
+              0
+            );
+            // Save the updated GRN document
+            await grnDoc.save();
+          }
+        } else {
+          return updatePurchaseOrderInfo;
+        }
+      }
+    }
     if (updatePurchaseOrderInfo) {
       return updatePurchaseOrderInfo;
     } else {
@@ -50,7 +82,7 @@ async function updatePurchaseOrderInfoDB(id, data) {
 }
 
 async function updatePurchaseOrderInfoStatusDB(updateStatus) {
-  console.log(updateStatus,updateStatus._id)
+  console.log(updateStatus, updateStatus._id);
   try {
     const updatedStatusData = await PurchaseOrderInfoModel.findByIdAndUpdate(
       updateStatus._id,

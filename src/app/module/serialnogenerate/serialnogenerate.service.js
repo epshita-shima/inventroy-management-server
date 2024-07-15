@@ -12,6 +12,7 @@ async function getNextSerialNumber(type) {
         { $inc: { serialNo: 1 } },
         { new: true, upsert: true }
       );
+      console.log(type)
       return result.serialNo;
 }
 
