@@ -9,11 +9,15 @@ const getGoodsReceiveNoteInfoController = async (req, res, next) => {
 };
 const getFilteredGoodsReceiveNoteInfoController = async (req, res, next) => {
   const { supplierPONo, supplierId, fromDate, toDate, selectMonth } = req.query;
-  console.log(supplierPONo, supplierId, fromDate, toDate, selectMonth);
-
 
   const filteredGoodsReceiveNotes =
-    await GoodsReceiveNoteService.getFilteredGRNDataInformationDB(supplierPONo, supplierId, fromDate, toDate, selectMonth);
+    await GoodsReceiveNoteService.getFilteredGRNDataInformationDB(
+      supplierPONo,
+      supplierId,
+      fromDate,
+      toDate,
+      selectMonth
+    );
   res.json(filteredGoodsReceiveNotes);
 };
 

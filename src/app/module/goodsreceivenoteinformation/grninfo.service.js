@@ -28,43 +28,46 @@ async function getGoodsReceiveNoteInfoByIdDB(id) {
   }
 }
 
-async function getFilteredGRNDataInformationDB(supplierPONo, supplierId, fromDate, toDate, selectMonth) {
-  
+async function getFilteredGRNDataInformationDB(
+  supplierPONo,
+  supplierId,
+  fromDate,
+  toDate,
+  selectMonth
+) {
   try {
     const filter = {};
 
     if (supplierPONo) {
       filter.supplierPoNo = supplierPONo;
-    }
-    if (supplierId) {
+    } else if (supplierId) {
       filter.supplierId = supplierId;
-    }
-    if (fromDate && toDate) {
-      filter.receiveDate = { $gte: new Date(fromDate), $lte: new Date(toDate) };
+    } else if (fromDate && toDate) {
+      filter.receiveDate = { $gte: fromDate, $lte: toDate };
     } else if (selectMonth) {
       let dateRanges = [];
       try {
-        dateRanges = JSON.parse(selectMonth).map(month => ({
-          start: new Date(month.start),
-          end: new Date(month.end)
+        dateRanges = JSON.parse(selectMonth).map((month) => ({
+          start: month.start,
+          end: month.end,
         }));
       } catch (error) {
         console.error("Error parsing selectMonth:", error);
         throw new Error("Invalid selectMonth format");
       }
-      
-      filter.$or = dateRanges.map(range => ({
-        receiveDate: { $gte: range.start, $lte: range.end }
+      filter.$or = dateRanges.map((range) => ({
+        receiveDate: { $gte: range.start, $lte: range.end },
       }));
     }
 
-    const data = await GoodsReceiveNoteInfoModel.find(filter);
-    console.log(data); // Verify data structure before returning
-
-    return data;
+    if (Object.keys(filter).length === 0 && filter.constructor === Object) {
+      return []; 
+    } else {
+      const data = await GoodsReceiveNoteInfoModel.find(filter);
+      return data;
+    }
   } catch (error) {
     console.error(error);
-   
   }
 }
 
