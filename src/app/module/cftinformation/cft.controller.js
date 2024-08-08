@@ -1,7 +1,6 @@
 const CFTInfosService = require("./cft.service");
 const CFTInfoModel=require('./cft.model')
 var fs = require("fs");
-
 const getCFTInfoController = async (req, res, next) => {
   const data = req.body;
   console.log(data)
@@ -10,36 +9,43 @@ const getCFTInfoController = async (req, res, next) => {
 };
 
 const insertCFTInfoController = async (req, res, next) => {
-  console.log('req body',req.body)
-  // try {
-  //    const newImage = new CFTInfoModel();
-  //    newImage.openingDate = req.body.openingDate;
-  //    newImage.kgPerUnit = req.body.kgPerUnit;
-  //    newImage.isActive = req.body.isActive
-  //    newImage.closingDate = req.body.closingDate 
-  //    newImage.makeBy = req.body.makeBy;
-  //    newImage.makeDate = req.body.makeDate;
-  //    newImage.updateBy = req.body.updateBy;
-  //    newImage.updateDate = req.body.updateDate;
 
-  //    if (req.file) {
-  //        newImage.image = req.file.path;
-  //    }
-  //    else{
-  //     newImage.image=''
-  //    }
- 
-  //   const CFTInfo = await CFTInfosService.insertCFTInfosDB(newImage);
-  //   res.status(200).json({
-  //     status: "success",
-  //     data: CFTInfo,
-  //   });
-  // } catch (error) {
-  //   res.status(500).json({
-  //     status: "error",
-  //     message:{error},
-  //   });
-  // }
+  try {
+    console.log('req.body:', req.body);
+    console.log('req.files:', req.files);
+
+    const data = req.body;
+    const files = req.files;
+
+    // const detailsData = JSON.parse(data.detailsData).map((detail, index) => ({
+    //   itemId: detail.itemId,
+    //   openingDate: detail.openingDate,
+    //   cftPerKg: detail.cftPerKg,
+    //   image: files[`detailsData[${index}][image]`] ? files[`detailsData[${index}][image]`][0].path : detail.image || '',
+    //   isActive: detail.isActive,
+    //   closingDate: detail.closingDate
+    // }));
+
+    // const newImage = new CFTInfoModel({
+    //   detailsData: detailsData,
+    //   makeBy: data.makeBy,
+    //   makeDate: data.makeDate,
+    //   updateBy: data.updateBy,
+    //   updateDate: data.updateDate
+    // });
+
+
+    // const CFTInfo = await CFTInfosService.insertCFTInfosDB(newImage);
+    // res.status(200).json({
+    //     status: "success",
+    //     data: CFTInfo,
+    // });
+} catch (error) {
+    res.status(500).json({
+        status: "error",
+        message: { error },
+    });
+}
 };
 
 const getCFTInfoByIdController = async (req, res) => {

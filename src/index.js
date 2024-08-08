@@ -21,8 +21,8 @@ const paymentInfoRoute = require("./app/module/paymentinformation/paymentinfo.ro
 const bankInfoRoute = require("./app/module/bankinformation/bankinfo.route");
 const purchaseOrderInfoRoute = require("./app/module/purchaseorderinformation/purchaseorderinfo.route");
 const goodsReceiveNoteRoute=require('./app/module/goodsreceivenoteinformation/grninfo.route')
-const upload = require("./app/module/multer/configuration");
-
+// const upload = require("./app/module/multer/configuration");
+const dynamicFields=require('./app/module/multer/configuration')
 require("dotenv").config();
 const cors = require("cors");
 
@@ -32,8 +32,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 const port = 5000;
-
-// app.use(upload.single('image'));
+app.use(bodyParser())
+app.use(dynamicFields);
 
 const uri = process.env.MONGO_URI;
 

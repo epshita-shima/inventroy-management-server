@@ -11,11 +11,11 @@ async function getCFTInfosDB(){
 
 async function insertCFTInfosDB(cftData) {
   console.log('cftData',cftData)
-    // try {
-    //   return await CFTInfosModal.insertMany(cftData);
-    // } catch (error) {
-    //   throw new Error("Error inserting cft info Data: " + error.message);
-    // }
+    try {
+      return await CFTInfosModal.insertMany(cftData);
+    } catch (error) {
+      throw new Error("Error inserting cft info Data: " + error.message);
+    }
   }
 
   async function getCFTInfosByIdDB(id) {
